@@ -6,8 +6,8 @@ import { Providers } from './providers'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'ClimaSell - Empowering Farmers',
-  description: 'Predictive Analytics & Market Savvy for Smallholder Farmers',
+  title: 'TherapyFlow - Mental Health Management',
+  description: 'Comprehensive therapy management platform for mental health professionals',
 }
 
 export default function RootLayout({

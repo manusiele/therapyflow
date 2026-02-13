@@ -5,31 +5,31 @@ export default function Home() {
     <main className="min-h-screen p-8">
       <div className="max-w-6xl mx-auto">
         <header className="mb-12">
-          <h1 className="text-5xl font-bold text-primary mb-4">ClimaSell</h1>
+          <h1 className="text-5xl font-bold text-primary mb-4">TherapyFlow</h1>
           <p className="text-xl text-gray-600">
-            Empowering Farmers through Predictive Analytics & Market Savvy
+            Mental Health & Therapy Management Platform
           </p>
         </header>
 
         <div className="grid md:grid-cols-3 gap-6 mb-12">
           <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-2xl font-semibold mb-3 text-primary">Weather Analytics</h2>
+            <h2 className="text-2xl font-semibold mb-3 text-primary">Session Management</h2>
             <p className="text-gray-700">
-              Real-time weather forecasts and climate insights to help you plan your farming activities.
+              Schedule, track, and manage therapy sessions with integrated calendar and reminder systems.
             </p>
           </div>
           
           <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-2xl font-semibold mb-3 text-primary">Market Prices</h2>
+            <h2 className="text-2xl font-semibold mb-3 text-primary">Progress Tracking</h2>
             <p className="text-gray-700">
-              Track crop prices and market trends to maximize your profits and reduce waste.
+              Monitor patient progress with assessments, mood tracking, and treatment analytics.
             </p>
           </div>
           
           <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-2xl font-semibold mb-3 text-primary">Direct Sales</h2>
+            <h2 className="text-2xl font-semibold mb-3 text-primary">Secure Communication</h2>
             <p className="text-gray-700">
-              Connect directly with buyers and consumers for transparent, fair trade.
+              HIPAA-compliant messaging and resource sharing between therapists and patients.
             </p>
           </div>
         </div>
@@ -39,13 +39,13 @@ export default function Home() {
             href="/dashboard" 
             className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-green-600 transition"
           >
-            Go to Dashboard
+            Therapist Dashboard
           </Link>
           <Link 
-            href="/market" 
+            href="/patient" 
             className="bg-secondary text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition"
           >
-            View Market Prices
+            Patient Portal
           </Link>
         </div>
       </div>

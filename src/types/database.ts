@@ -9,24 +9,26 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
-      farmers: {
+      therapists: {
         Row: {
           id: string
           created_at: string
           name: string
           email: string
           phone: string
-          location: string
-          farm_size: number
+          license_number: string
+          specialization: string
+          bio: string
         }
         Insert: {
           id?: string
           created_at?: string
           name: string
           email: string
-          phone: string
-          location: string
-          farm_size: number
+          phone?: string
+          license_number?: string
+          specialization: string
+          bio?: string
         }
         Update: {
           id?: string
@@ -34,63 +36,102 @@ export interface Database {
           name?: string
           email?: string
           phone?: string
-          location?: string
-          farm_size?: number
+          license_number?: string
+          specialization?: string
+          bio?: string
         }
       }
-      crops: {
+      patients: {
         Row: {
           id: string
-          farmer_id: string
-          crop_type: string
-          planted_date: string
-          expected_harvest: string
-          quantity: number
+          created_at: string
+          name: string
+          email: string
+          phone: string
+          date_of_birth: string
+          emergency_contact: string
+          therapist_id: string
+        }
+        Insert: {
+          id?: string
+          created_at?: string
+          name: string
+          email: string
+          phone?: string
+          date_of_birth?: string
+          emergency_contact?: string
+          therapist_id?: string
+        }
+        Update: {
+          id?: string
+          created_at?: string
+          name?: string
+          email?: string
+          phone?: string
+          date_of_birth?: string
+          emergency_contact?: string
+          therapist_id?: string
+        }
+      }
+      sessions: {
+        Row: {
+          id: string
+          therapist_id: string
+          patient_id: string
+          scheduled_at: string
+          duration_minutes: number
           status: string
+          notes: string
+          session_type: string
         }
         Insert: {
           id?: string
-          farmer_id: string
-          crop_type: string
-          planted_date: string
-          expected_harvest: string
-          quantity: number
+          therapist_id: string
+          patient_id: string
+          scheduled_at: string
+          duration_minutes?: number
           status?: string
+          notes?: string
+          session_type?: string
         }
         Update: {
           id?: string
-          farmer_id?: string
-          crop_type?: string
-          planted_date?: string
-          expected_harvest?: string
-          quantity?: number
+          therapist_id?: string
+          patient_id?: string
+          scheduled_at?: string
+          duration_minutes?: number
           status?: string
+          notes?: string
+          session_type?: string
         }
       }
-      market_prices: {
+      assessments: {
         Row: {
           id: string
-          crop_type: string
-          price: number
-          currency: string
-          date: string
-          location: string
+          patient_id: string
+          therapist_id: string
+          assessment_type: string
+          score: number
+          responses: Json
+          created_at: string
         }
         Insert: {
           id?: string
-          crop_type: string
-          price: number
-          currency?: string
-          date: string
-          location: string
+          patient_id: string
+          therapist_id: string
+          assessment_type: string
+          score?: number
+          responses?: Json
+          created_at?: string
         }
         Update: {
           id?: string
-          crop_type?: string
-          price?: number
-          currency?: string
-          date?: string
-          location?: string
+          patient_id?: string
+          therapist_id?: string
+          assessment_type?: string
+          score?: number
+          responses?: Json
+          created_at?: string
         }
       }
     }

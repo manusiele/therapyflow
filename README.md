@@ -1,23 +1,24 @@
-# ClimaSell
+# TherapyFlow
 
-Empowering Farmers through Predictive Analytics & Market Savvy
+Mental Health & Therapy Management Platform
 
 ## Problem Statement
 
-Smallholder farmers face challenges adapting to climate change and economic pressures:
-- Inconsistent weather patterns
-- Fluctuating market prices
-- Limited access to quality inputs
-- Opaque supply chains
-- Lack of real-time data
+Mental health professionals and patients face challenges in managing therapy sessions and progress:
+- Inconsistent session scheduling and tracking
+- Limited progress monitoring tools
+- Fragmented communication between sessions
+- Lack of integrated assessment tools
+- Difficulty accessing therapy resources
 
 ## Solution
 
-ClimaSell provides a comprehensive agricultural ecosystem that:
-- Synchronizes weather analytics with market trends
-- Provides accessibility to quality inputs at reduced costs
-- Improves supply chain visibility
-- Facilitates direct farmer-to-consumer connections
+TherapyFlow provides a comprehensive therapy management ecosystem that:
+- Streamlines session scheduling and management
+- Provides progress tracking and analytics
+- Facilitates secure communication between therapists and patients
+- Integrates assessment tools and resources
+- Offers data-driven insights for treatment optimization
 
 ## Tech Stack
 
@@ -67,9 +68,9 @@ src/
 
 ## Goals (2026)
 
-- 1,500 active farmer accounts in year one
-- $3M in facilitated annual revenue
-- Double user base in year two
+- 500 active therapist accounts in year one
+- 2,000 patient users
+- Comprehensive therapy management platform
 
 ## License
 

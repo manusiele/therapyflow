@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
-import farmerReducer from './slices/farmerSlice'
-import marketReducer from './slices/marketSlice'
+import therapistReducer from './slices/therapistSlice'
+import sessionReducer from './slices/sessionSlice'
+import patientReducer from './slices/patientSlice'
 
 export const store = configureStore({
   reducer: {
-    farmer: farmerReducer,
-    market: marketReducer,
+    therapist: therapistReducer,
+    session: sessionReducer,
+    patient: patientReducer,
   },
 })
 
