@@ -1,17 +1,34 @@
 'use client'
 
+import Image from 'next/image'
+import Link from 'next/link'
 import ThemeToggle from '@/components/ThemeToggle'
+import { useTheme } from '@/contexts/ThemeContext'
 
 export default function PatientPortal() {
+  const { theme } = useTheme()
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
       {/* Header */}
       <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700">
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Patient Portal</h1>
-              <p className="text-slate-600 dark:text-slate-400 mt-1">Welcome back, John</p>
+            <div className="flex items-center space-x-4">
+              <Link href="/">
+                <Image 
+                  src={theme === 'dark' ? '/logo/logo-horizontal-dark.png' : '/logo/logo-horizontal.png'}
+                  alt="TherapyFlow" 
+                  width={320}
+                  height={64}
+                  className="h-16 w-auto cursor-pointer hover:opacity-80 transition-opacity"
+                  priority
+                />
+              </Link>
+              <div className="border-l border-slate-300 dark:border-slate-600 pl-4">
+                <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Patient Portal</h1>
+                <p className="text-sm text-slate-600 dark:text-slate-400 mt-0.5">Welcome back, John</p>
+              </div>
             </div>
             <div className="flex items-center space-x-4">
               <ThemeToggle />
