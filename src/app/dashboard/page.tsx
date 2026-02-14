@@ -4,6 +4,7 @@ import { useState } from 'react'
 import SessionOverview from '@/components/SessionOverview'
 import PatientProgress from '@/components/PatientProgress'
 import AddSessionModal, { SessionFormData } from '@/components/AddSessionModal'
+import ThemeToggle from '@/components/ThemeToggle'
 
 export default function Dashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -15,16 +16,17 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md border-b border-slate-200">
+      <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700">
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-3xl font-bold text-slate-900">Therapist Dashboard</h1>
-              <p className="text-slate-600 mt-1">Welcome back, Dr. Sarah Johnson</p>
+              <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Therapist Dashboard</h1>
+              <p className="text-slate-600 dark:text-slate-400 mt-1">Welcome back, Dr. Sarah Johnson</p>
             </div>
             <div className="flex items-center space-x-4">
+              <ThemeToggle />
               <button 
                 onClick={() => setIsModalOpen(true)}
                 className="btn-secondary"
@@ -34,7 +36,7 @@ export default function Dashboard() {
                 </svg>
                 New Session
               </button>
-              <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+              <div className="w-10 h-10 bg-blue-600 dark:bg-blue-500 rounded-full flex items-center justify-center">
                 <span className="text-white font-medium text-sm">SJ</span>
               </div>
             </div>
@@ -47,20 +49,20 @@ export default function Dashboard() {
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <div className="card text-center">
-            <div className="text-2xl font-bold text-blue-600 mb-1">8</div>
-            <div className="text-sm text-slate-600">Today's Sessions</div>
+            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-1">8</div>
+            <div className="text-sm text-slate-600 dark:text-slate-400">Today's Sessions</div>
           </div>
           <div className="card text-center">
-            <div className="text-2xl font-bold text-purple-600 mb-1">24</div>
-            <div className="text-sm text-slate-600">Active Patients</div>
+            <div className="text-2xl font-bold text-purple-600 dark:text-purple-400 mb-1">24</div>
+            <div className="text-sm text-slate-600 dark:text-slate-400">Active Patients</div>
           </div>
           <div className="card text-center">
-            <div className="text-2xl font-bold text-green-600 mb-1">92%</div>
-            <div className="text-sm text-slate-600">Attendance Rate</div>
+            <div className="text-2xl font-bold text-green-600 dark:text-green-400 mb-1">92%</div>
+            <div className="text-sm text-slate-600 dark:text-slate-400">Attendance Rate</div>
           </div>
           <div className="card text-center">
-            <div className="text-2xl font-bold text-yellow-600 mb-1">3</div>
-            <div className="text-sm text-slate-600">Pending Notes</div>
+            <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400 mb-1">3</div>
+            <div className="text-sm text-slate-600 dark:text-slate-400">Pending Notes</div>
           </div>
         </div>
 
@@ -73,27 +75,27 @@ export default function Dashboard() {
         {/* Recent Activity */}
         <div className="mt-8">
           <div className="card">
-            <h2 className="text-xl font-semibold text-slate-900 mb-6">Recent Activity</h2>
+            <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-6">Recent Activity</h2>
             <div className="space-y-4">
-              <div className="flex items-center space-x-4 p-4 bg-slate-50 rounded-lg">
-                <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+              <div className="flex items-center space-x-4 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
+                <div className="w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full"></div>
                 <div className="flex-1">
-                  <p className="text-slate-900 font-medium">Session completed with John Doe</p>
-                  <p className="text-sm text-slate-600">Individual therapy • 2 hours ago</p>
+                  <p className="text-slate-900 dark:text-slate-100 font-medium">Session completed with John Doe</p>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">Individual therapy • 2 hours ago</p>
                 </div>
               </div>
-              <div className="flex items-center space-x-4 p-4 bg-slate-50 rounded-lg">
-                <div className="w-2 h-2 bg-purple-600 rounded-full"></div>
+              <div className="flex items-center space-x-4 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
+                <div className="w-2 h-2 bg-purple-600 dark:bg-purple-400 rounded-full"></div>
                 <div className="flex-1">
-                  <p className="text-slate-900 font-medium">PHQ-9 assessment submitted by Jane Smith</p>
-                  <p className="text-sm text-slate-600">Score: 8 (Moderate) • 4 hours ago</p>
+                  <p className="text-slate-900 dark:text-slate-100 font-medium">PHQ-9 assessment submitted by Jane Smith</p>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">Score: 8 (Moderate) • 4 hours ago</p>
                 </div>
               </div>
-              <div className="flex items-center space-x-4 p-4 bg-slate-50 rounded-lg">
-                <div className="w-2 h-2 bg-green-600 rounded-full"></div>
+              <div className="flex items-center space-x-4 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
+                <div className="w-2 h-2 bg-green-600 dark:bg-green-400 rounded-full"></div>
                 <div className="flex-1">
-                  <p className="text-slate-900 font-medium">New patient registration: Michael Brown</p>
-                  <p className="text-sm text-slate-600">Initial consultation scheduled • Yesterday</p>
+                  <p className="text-slate-900 dark:text-slate-100 font-medium">New patient registration: Michael Brown</p>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">Initial consultation scheduled • Yesterday</p>
                 </div>
               </div>
             </div>

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import AddSessionModal, { SessionFormData } from '@/components/AddSessionModal'
+import ThemeToggle from '@/components/ThemeToggle'
 
 interface Session {
   id: string
@@ -67,23 +68,24 @@ export default function SchedulePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md border-b border-slate-200">
+      <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700">
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-4">
-              <Link href="/dashboard" className="text-slate-600 hover:text-slate-900">
+              <Link href="/dashboard" className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
               </Link>
               <div>
-                <h1 className="text-3xl font-bold text-slate-900">Full Schedule</h1>
-                <p className="text-slate-600 mt-1">{formatDate(selectedDate)}</p>
+                <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Full Schedule</h1>
+                <p className="text-slate-600 dark:text-slate-400 mt-1">{formatDate(selectedDate)}</p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
+              <ThemeToggle />
               <button 
                 onClick={() => setIsModalOpen(true)}
                 className="btn-secondary"
@@ -109,16 +111,16 @@ export default function SchedulePage() {
                 newDate.setDate(newDate.getDate() - 1)
                 setSelectedDate(newDate)
               }}
-              className="p-2 hover:bg-white rounded-lg transition-colors"
+              className="p-2 hover:bg-white dark:hover:bg-slate-800 rounded-lg transition-colors"
             >
-              <svg className="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
             
             <button 
               onClick={() => setSelectedDate(new Date())}
-              className="px-4 py-2 bg-white hover:bg-slate-50 rounded-lg text-slate-700 font-medium transition-colors"
+              className="px-4 py-2 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-lg text-slate-700 dark:text-slate-300 font-medium transition-colors"
             >
               Today
             </button>
@@ -129,22 +131,22 @@ export default function SchedulePage() {
                 newDate.setDate(newDate.getDate() + 1)
                 setSelectedDate(newDate)
               }}
-              className="p-2 hover:bg-white rounded-lg transition-colors"
+              className="p-2 hover:bg-white dark:hover:bg-slate-800 rounded-lg transition-colors"
             >
-              <svg className="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </button>
           </div>
 
           {/* View Toggle */}
-          <div className="flex items-center space-x-2 bg-white rounded-lg p-1">
+          <div className="flex items-center space-x-2 bg-white dark:bg-slate-800 rounded-lg p-1">
             <button
               onClick={() => setView('day')}
               className={`px-4 py-2 rounded-md transition-colors ${
                 view === 'day' 
                   ? 'bg-blue-600 text-white' 
-                  : 'text-slate-600 hover:bg-slate-100'
+                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'
               }`}
             >
               Day
@@ -154,7 +156,7 @@ export default function SchedulePage() {
               className={`px-4 py-2 rounded-md transition-colors ${
                 view === 'week' 
                   ? 'bg-blue-600 text-white' 
-                  : 'text-slate-600 hover:bg-slate-100'
+                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'
               }`}
             >
               Week
@@ -167,16 +169,16 @@ export default function SchedulePage() {
           {/* Main Schedule */}
           <div className="lg:col-span-2 space-y-4">
             <div className="card">
-              <h2 className="text-xl font-semibold text-slate-900 mb-6">
+              <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-6">
                 Sessions ({sessions.length})
               </h2>
               
               {sessions.length === 0 ? (
                 <div className="text-center py-12">
-                  <svg className="w-16 h-16 text-slate-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-16 h-16 text-slate-300 dark:text-slate-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
-                  <p className="text-slate-600">No sessions scheduled for this day</p>
+                  <p className="text-slate-600 dark:text-slate-400">No sessions scheduled for this day</p>
                   <button 
                     onClick={() => setIsModalOpen(true)}
                     className="btn-primary mt-4"
@@ -189,25 +191,25 @@ export default function SchedulePage() {
                   {sessions.map((session) => (
                     <div 
                       key={session.id} 
-                      className="p-4 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer border border-slate-200"
+                      className="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer border border-slate-200 dark:border-slate-600"
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex items-start space-x-4 flex-1">
-                          <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                            <span className="text-blue-700 font-medium text-sm">
+                          <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center flex-shrink-0">
+                            <span className="text-blue-700 dark:text-blue-300 font-medium text-sm">
                               {session.patient.split(' ').map(n => n[0]).join('')}
                             </span>
                           </div>
                           
                           <div className="flex-1">
                             <div className="flex items-center space-x-3 mb-1">
-                              <h3 className="font-semibold text-slate-900">{session.patient}</h3>
+                              <h3 className="font-semibold text-slate-900 dark:text-slate-100">{session.patient}</h3>
                               <span className={`text-xs px-2 py-1 rounded-full border ${getStatusColor(session.status)}`}>
                                 {session.status}
                               </span>
                             </div>
-                            <p className="text-sm text-slate-600 mb-2">{session.type}</p>
-                            <div className="flex items-center space-x-4 text-sm text-slate-500">
+                            <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">{session.type}</p>
+                            <div className="flex items-center space-x-4 text-sm text-slate-500 dark:text-slate-500">
                               <span className="flex items-center">
                                 <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -225,14 +227,14 @@ export default function SchedulePage() {
                         </div>
                         
                         <div className="flex space-x-2">
-                          <button className="p-2 hover:bg-white rounded-lg transition-colors">
-                            <svg className="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <button className="p-2 hover:bg-white dark:hover:bg-slate-600 rounded-lg transition-colors">
+                            <svg className="w-5 h-5 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                             </svg>
                           </button>
-                          <button className="p-2 hover:bg-white rounded-lg transition-colors">
-                            <svg className="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <button className="p-2 hover:bg-white dark:hover:bg-slate-600 rounded-lg transition-colors">
+                            <svg className="w-5 h-5 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
                           </button>
@@ -249,20 +251,20 @@ export default function SchedulePage() {
           <div className="space-y-6">
             {/* Mini Calendar */}
             <div className="card">
-              <h3 className="font-semibold text-slate-900 mb-4">Calendar</h3>
+              <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-4">Calendar</h3>
               <div className="text-center">
-                <div className="text-sm text-slate-600 mb-2">
+                <div className="text-sm text-slate-600 dark:text-slate-400 mb-2">
                   {selectedDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                 </div>
                 <div className="grid grid-cols-7 gap-1 text-xs">
                   {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
-                    <div key={i} className="text-slate-500 font-medium py-2">{day}</div>
+                    <div key={i} className="text-slate-500 dark:text-slate-500 font-medium py-2">{day}</div>
                   ))}
                   {Array.from({ length: 35 }, (_, i) => (
                     <button
                       key={i}
-                      className={`py-2 rounded hover:bg-slate-100 ${
-                        i === 15 ? 'bg-blue-600 text-white hover:bg-blue-700' : 'text-slate-700'
+                      className={`py-2 rounded hover:bg-slate-100 dark:hover:bg-slate-700 ${
+                        i === 15 ? 'bg-blue-600 text-white hover:bg-blue-700' : 'text-slate-700 dark:text-slate-300'
                       }`}
                     >
                       {i + 1}
@@ -274,34 +276,34 @@ export default function SchedulePage() {
 
             {/* Quick Stats */}
             <div className="card">
-              <h3 className="font-semibold text-slate-900 mb-4">Today's Summary</h3>
+              <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-4">Today's Summary</h3>
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
-                  <span className="text-slate-600">Total Sessions</span>
-                  <span className="font-semibold text-slate-900">{sessions.length}</span>
+                  <span className="text-slate-600 dark:text-slate-400">Total Sessions</span>
+                  <span className="font-semibold text-slate-900 dark:text-slate-100">{sessions.length}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-slate-600">Confirmed</span>
-                  <span className="font-semibold text-green-600">
+                  <span className="text-slate-600 dark:text-slate-400">Confirmed</span>
+                  <span className="font-semibold text-green-600 dark:text-green-400">
                     {sessions.filter(s => s.status === 'confirmed').length}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-slate-600">Pending</span>
-                  <span className="font-semibold text-yellow-600">
+                  <span className="text-slate-600 dark:text-slate-400">Pending</span>
+                  <span className="font-semibold text-yellow-600 dark:text-yellow-400">
                     {sessions.filter(s => s.status === 'pending').length}
                   </span>
                 </div>
-                <div className="flex justify-between items-center pt-3 border-t border-slate-200">
-                  <span className="text-slate-600">Total Hours</span>
-                  <span className="font-semibold text-blue-600">4.5 hrs</span>
+                <div className="flex justify-between items-center pt-3 border-t border-slate-200 dark:border-slate-700">
+                  <span className="text-slate-600 dark:text-slate-400">Total Hours</span>
+                  <span className="font-semibold text-blue-600 dark:text-blue-400">4.5 hrs</span>
                 </div>
               </div>
             </div>
 
             {/* Quick Actions */}
             <div className="card">
-              <h3 className="font-semibold text-slate-900 mb-4">Quick Actions</h3>
+              <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-4">Quick Actions</h3>
               <div className="space-y-2">
                 <button 
                   onClick={() => setIsModalOpen(true)}
