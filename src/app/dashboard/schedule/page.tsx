@@ -1106,134 +1106,172 @@ export default function SchedulePage() {
 
       {/* Session Details Modal */}
       {showSessionDetails && selectedSession && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden">
-            {/* Header with Gradient */}
-            <div className="relative bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 p-6">
-              <div className="flex items-center justify-between relative z-10">
-                <div className="flex items-center space-x-4">
-                  <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center border-2 border-white/30">
-                    <span className="text-white font-bold text-xl">
-                      {selectedSession.patient.split(' ').map(n => n[0]).join('')}
-                    </span>
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-fade-in">
+          <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl max-w-3xl w-full overflow-hidden">
+            {/* Enhanced Header with Gradient and Pattern */}
+            <div className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-purple-700 dark:from-blue-500 dark:via-blue-600 dark:to-purple-600 p-8 overflow-hidden">
+              {/* Decorative Background Pattern */}
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute top-0 left-0 w-full h-full" style={{
+                  backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
+                  backgroundSize: '40px 40px'
+                }}></div>
+              </div>
+              
+              {/* Floating Orbs */}
+              <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
+              <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-500/20 rounded-full blur-3xl"></div>
+              
+              <div className="relative z-10 flex items-start justify-between">
+                <div className="flex items-start space-x-6">
+                  {/* Enhanced Avatar */}
+                  <div className="relative group">
+                    <div className="w-24 h-24 bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-xl rounded-3xl flex items-center justify-center border-4 border-white/30 shadow-2xl transform group-hover:scale-105 transition-transform duration-300">
+                      <span className="text-white font-bold text-3xl">
+                        {selectedSession.patient.split(' ').map(n => n[0]).join('')}
+                      </span>
+                    </div>
+                    {/* Status Indicator */}
+                    <div className={`absolute -bottom-2 -right-2 w-8 h-8 rounded-full border-4 border-white dark:border-slate-800 shadow-lg ${
+                      selectedSession.status === 'confirmed' ? 'bg-green-500' :
+                      selectedSession.status === 'pending' ? 'bg-yellow-500' :
+                      selectedSession.status === 'completed' ? 'bg-blue-500' :
+                      'bg-red-500'
+                    }`}></div>
                   </div>
-                  <div>
-                    <h2 className="text-2xl font-bold text-white">{selectedSession.patient}</h2>
-                    <p className="text-blue-100 dark:text-blue-200">{selectedSession.type}</p>
+                  
+                  <div className="pt-2">
+                    <h2 className="text-3xl font-bold text-white mb-2 drop-shadow-lg">
+                      {selectedSession.patient}
+                    </h2>
+                    <div className="flex items-center space-x-3">
+                      <span className="px-4 py-1.5 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-medium border border-white/30">
+                        {selectedSession.type}
+                      </span>
+                      <span className={`px-4 py-1.5 rounded-full text-sm font-bold border-2 shadow-lg ${
+                        selectedSession.status === 'confirmed' ? 'bg-green-500 text-white border-green-400' :
+                        selectedSession.status === 'pending' ? 'bg-yellow-500 text-white border-yellow-400' :
+                        selectedSession.status === 'completed' ? 'bg-blue-500 text-white border-blue-400' :
+                        'bg-red-500 text-white border-red-400'
+                      }`}>
+                        {selectedSession.status.toUpperCase()}
+                      </span>
+                    </div>
                   </div>
                 </div>
+                
                 <button 
                   onClick={() => setShowSessionDetails(false)}
-                  className="p-2 hover:bg-white/20 rounded-xl transition-all hover:rotate-90 duration-300"
+                  className="p-3 hover:bg-white/20 rounded-2xl transition-all hover:rotate-90 duration-300 backdrop-blur-sm border border-white/20"
+                  aria-label="Close modal"
                 >
                   <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
               </div>
-              
-              {/* Decorative Elements */}
-              <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full blur-3xl"></div>
             </div>
 
-            {/* Content */}
-            <div className="p-6 space-y-6">
-              {/* Status Badge */}
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Status</span>
-                <span className={`px-4 py-2 rounded-xl font-semibold text-sm border-2 ${
-                  selectedSession.status === 'confirmed' ? 'bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800' :
-                  selectedSession.status === 'pending' ? 'bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 border-yellow-200 dark:border-yellow-800' :
-                  selectedSession.status === 'completed' ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800' :
-                  'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800'
-                }`}>
-                  {selectedSession.status.toUpperCase()}
-                </span>
-              </div>
-
-              {/* Session Details Grid */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-4 border border-slate-200 dark:border-slate-600">
-                  <div className="flex items-center space-x-3 mb-2">
-                    <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/50 rounded-lg flex items-center justify-center">
-                      <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {/* Content Section with Enhanced Cards */}
+            <div className="p-8 space-y-6 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-800">
+              {/* Session Info Grid */}
+              <div className="grid grid-cols-3 gap-4">
+                {/* Time Card */}
+                <div className="group relative bg-white dark:bg-slate-800 rounded-2xl p-5 border-2 border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 transition-all hover:shadow-xl hover:scale-105 cursor-pointer">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <div className="relative">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
+                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                     </div>
-                    <div>
-                      <div className="text-xs text-slate-500 dark:text-slate-400">Time</div>
-                      <div className="font-semibold text-slate-900 dark:text-slate-100">{selectedSession.time}</div>
-                    </div>
+                    <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Time</div>
+                    <div className="text-xl font-bold text-slate-900 dark:text-slate-100">{selectedSession.time}</div>
                   </div>
                 </div>
 
-                <div className="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-4 border border-slate-200 dark:border-slate-600">
-                  <div className="flex items-center space-x-3 mb-2">
-                    <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/50 rounded-lg flex items-center justify-center">
-                      <svg className="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {/* Duration Card */}
+                <div className="group relative bg-white dark:bg-slate-800 rounded-2xl p-5 border-2 border-slate-200 dark:border-slate-700 hover:border-purple-400 dark:hover:border-purple-500 transition-all hover:shadow-xl hover:scale-105 cursor-pointer">
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <div className="relative">
+                    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
+                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                       </svg>
                     </div>
-                    <div>
-                      <div className="text-xs text-slate-500 dark:text-slate-400">Duration</div>
-                      <div className="font-semibold text-slate-900 dark:text-slate-100">{selectedSession.duration}</div>
+                    <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Duration</div>
+                    <div className="text-xl font-bold text-slate-900 dark:text-slate-100">{selectedSession.duration}</div>
+                  </div>
+                </div>
+
+                {/* Session Type Card */}
+                <div className="group relative bg-white dark:bg-slate-800 rounded-2xl p-5 border-2 border-slate-200 dark:border-slate-700 hover:border-green-400 dark:hover:border-green-500 transition-all hover:shadow-xl hover:scale-105 cursor-pointer">
+                  <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <div className="relative">
+                    <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
+                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                    </div>
+                    <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Type</div>
+                    <div className="text-sm font-bold text-slate-900 dark:text-slate-100 leading-tight">{selectedSession.type}</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Notes Section (if available) */}
+              {selectedSession.notes && (
+                <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-2xl p-6 border-2 border-amber-200 dark:border-amber-800">
+                  <div className="flex items-start space-x-3">
+                    <div className="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-sm font-bold text-amber-900 dark:text-amber-200 mb-2">Session Notes</div>
+                      <p className="text-amber-800 dark:text-amber-300 text-sm leading-relaxed">{selectedSession.notes}</p>
                     </div>
                   </div>
                 </div>
-              </div>
-
-              {/* Session Type */}
-              <div className="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-4 border border-slate-200 dark:border-slate-600">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-green-100 dark:bg-green-900/50 rounded-lg flex items-center justify-center">
-                    <svg className="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                  </div>
-                  <div className="flex-1">
-                    <div className="text-xs text-slate-500 dark:text-slate-400">Session Type</div>
-                    <div className="font-semibold text-slate-900 dark:text-slate-100">{selectedSession.type}</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Notes Section */}
-              {selectedSession.notes && (
-                <div className="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-4 border border-slate-200 dark:border-slate-600">
-                  <div className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Notes</div>
-                  <p className="text-slate-600 dark:text-slate-400 text-sm">{selectedSession.notes}</p>
-                </div>
               )}
 
-              {/* Action Buttons */}
-              <div className="flex space-x-3 pt-4">
+              {/* Enhanced Action Buttons */}
+              <div className="grid grid-cols-3 gap-4 pt-4">
                 <button 
                   onClick={() => showToastMessage('Video call feature coming soon!')}
-                  className="flex-1 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all hover:scale-105 flex items-center justify-center space-x-2"
+                  className="group relative col-span-2 overflow-hidden bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-4 px-6 rounded-2xl transition-all hover:scale-105 shadow-xl hover:shadow-2xl flex items-center justify-center space-x-3"
                   title="Join video call (Ctrl+V)"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
+                  <svg className="w-6 h-6 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                   </svg>
-                  <span>Join Video Call</span>
+                  <span className="relative z-10">Join Video Call</span>
                 </button>
+                
                 <button 
                   onClick={() => showToastMessage('Edit feature coming soon!')}
-                  className="px-4 py-3 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 font-medium rounded-xl transition-all hover:scale-105"
+                  className="bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-semibold py-4 px-6 rounded-2xl transition-all hover:scale-105 border-2 border-slate-200 dark:border-slate-600 hover:border-blue-400 dark:hover:border-blue-500 shadow-lg hover:shadow-xl flex items-center justify-center"
                   title="Edit session (Ctrl+E)"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
                 </button>
+              </div>
+
+              {/* Danger Zone */}
+              <div className="pt-4 border-t-2 border-slate-200 dark:border-slate-700">
                 <button 
                   onClick={() => handleDeleteSession(selectedSession)}
-                  className="px-4 py-3 bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/50 text-red-600 dark:text-red-400 font-medium rounded-xl transition-all hover:scale-105 border-2 border-red-200 dark:border-red-800"
+                  className="w-full bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 font-semibold py-3 px-6 rounded-xl transition-all hover:scale-[1.02] border-2 border-red-200 dark:border-red-800 hover:border-red-400 dark:hover:border-red-600 flex items-center justify-center space-x-2"
                   title="Cancel session (Delete)"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                   </svg>
+                  <span>Cancel This Session</span>
                 </button>
               </div>
             </div>
