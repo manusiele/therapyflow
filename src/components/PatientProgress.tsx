@@ -14,36 +14,36 @@ export default function PatientProgress() {
   return (
     <div className="card">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-slate-900">Patient Progress</h2>
-        <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">
+        <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">Patient Progress</h2>
+        <button className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium">
           View All Reports
         </button>
       </div>
       
       <div className="space-y-4">
         {progressData.map((patient, index) => (
-          <div key={index} className="p-4 bg-slate-50 rounded-lg">
+          <div key={index} className="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
             <div className="flex justify-between items-start mb-3">
               <div>
-                <p className="font-medium text-slate-900">{patient.patient}</p>
-                <p className="text-sm text-slate-600">{patient.sessions} sessions completed</p>
+                <p className="font-medium text-slate-900 dark:text-slate-100">{patient.patient}</p>
+                <p className="text-sm text-slate-600 dark:text-slate-400">{patient.sessions} sessions completed</p>
               </div>
               <span className={`text-sm font-semibold px-2 py-1 rounded-full ${
                 parseInt(patient.improvement) > 15 
-                  ? 'text-green-700 bg-green-100' 
-                  : 'text-yellow-700 bg-yellow-100'
+                  ? 'text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-900/30' 
+                  : 'text-yellow-700 dark:text-yellow-300 bg-yellow-100 dark:bg-yellow-900/30'
               }`}>
                 {patient.improvement}
               </span>
             </div>
             
             <div className="flex justify-between items-center">
-              <div className="text-sm text-slate-600">
+              <div className="text-sm text-slate-600 dark:text-slate-400">
                 Latest: {patient.lastAssessment}
               </div>
-              <div className="w-24 h-2 bg-slate-200 rounded-full overflow-hidden">
+              <div className="w-24 h-2 bg-slate-200 dark:bg-slate-600 rounded-full overflow-hidden">
                 <div 
-                  className="h-full bg-blue-500 rounded-full transition-all duration-300"
+                  className="h-full bg-blue-500 dark:bg-blue-400 rounded-full transition-all duration-300"
                   style={{ width: `${Math.min(parseInt(patient.improvement.replace('%', '')) * 3, 100)}%` }}
                 ></div>
               </div>
@@ -52,14 +52,14 @@ export default function PatientProgress() {
         ))}
       </div>
       
-      <div className="mt-6 grid grid-cols-2 gap-4 pt-4 border-t border-slate-200">
+      <div className="mt-6 grid grid-cols-2 gap-4 pt-4 border-t border-slate-200 dark:border-slate-700">
         <div className="text-center">
-          <div className="text-lg font-semibold text-green-600">87%</div>
-          <div className="text-xs text-slate-600">Avg Improvement</div>
+          <div className="text-lg font-semibold text-green-600 dark:text-green-400">87%</div>
+          <div className="text-xs text-slate-600 dark:text-slate-400">Avg Improvement</div>
         </div>
         <div className="text-center">
-          <div className="text-lg font-semibold text-blue-600">95%</div>
-          <div className="text-xs text-slate-600">Attendance Rate</div>
+          <div className="text-lg font-semibold text-blue-600 dark:text-blue-400">95%</div>
+          <div className="text-xs text-slate-600 dark:text-slate-400">Attendance Rate</div>
         </div>
       </div>
     </div>
