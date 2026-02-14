@@ -23,14 +23,16 @@ export default function Dashboard() {
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-4">
-              <Image 
-                src="/logo/logo-horizontal.png" 
-                alt="TherapyFlow" 
-                width={350}
-                height={70}
-                className="h-[70px] w-auto dark:invert"
-                priority
-              />
+              <div className="dark:bg-white/10 dark:backdrop-blur-md dark:border dark:border-white/20 dark:rounded-xl dark:px-4 dark:py-2 dark:shadow-lg dark:shadow-blue-500/10">
+                <Image 
+                  src="/logo/logo-horizontal.png" 
+                  alt="TherapyFlow" 
+                  width={350}
+                  height={70}
+                  className="h-[70px] w-auto"
+                  priority
+                />
+              </div>
               <div className="border-l border-slate-300 dark:border-slate-600 pl-4">
                 <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Dashboard</h1>
                 <p className="text-sm text-slate-600 dark:text-slate-400 mt-0.5">Welcome back, Dr. Sarah Johnson</p>

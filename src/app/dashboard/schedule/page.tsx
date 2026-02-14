@@ -287,14 +287,16 @@ export default function SchedulePage() {
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-4">
               <Link href="/dashboard">
-                <Image 
-                  src="/logo/logo-horizontal.png" 
-                  alt="TherapyFlow" 
-                  width={550}
-                  height={700}
-                  className="h-[70px] w-auto cursor-pointer hover:opacity-80 transition-opacity dark:invert"
-                  priority
-                />
+                <div className="dark:bg-white/10 dark:backdrop-blur-md dark:border dark:border-white/20 dark:rounded-xl dark:px-4 dark:py-2 dark:shadow-lg dark:shadow-blue-500/10 hover:opacity-80 transition-opacity">
+                  <Image 
+                    src="/logo/logo-horizontal.png" 
+                    alt="TherapyFlow" 
+                    width={550}
+                    height={700}
+                    className="h-[70px] w-auto cursor-pointer"
+                    priority
+                  />
+                </div>
               </Link>
               <div className="border-l border-slate-300 dark:border-slate-600 pl-4">
                 <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Full Schedule</h1>
