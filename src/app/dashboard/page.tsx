@@ -5,17 +5,35 @@ import Image from 'next/image'
 import SessionOverview from '@/components/SessionOverview'
 import PatientProgress from '@/components/PatientProgress'
 import AddSessionModal, { SessionFormData } from '@/components/AddSessionModal'
+import ProfileModal from '@/components/ProfileModal'
 import ThemeToggle from '@/components/ThemeToggle'
 import { useTheme } from '@/contexts/ThemeContext'
 
 export default function Dashboard() {
   const { theme } = useTheme()
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
+  const [profileData, setProfileData] = useState({
+    name: 'Dr. Sarah Johnson',
+    email: 'sarah.johnson@therapyflow.com',
+    phone: '+1 (555) 123-4567',
+    specialty: 'Clinical Psychology, Cognitive Behavioral Therapy',
+    licenseNumber: 'PSY-12345-CA',
+    bio: 'Experienced clinical psychologist specializing in CBT and trauma-informed care. Over 10 years of experience helping clients overcome anxiety, depression, and PTSD.',
+    role: 'therapist' as const
+  })
 
   const handleAddSession = (sessionData: SessionFormData) => {
     // In production, this would dispatch to Redux and save to Supabase
     console.log('New session:', sessionData)
     // Show success notification, refresh data, etc.
+  }
+
+  const handleSaveProfile = (data: typeof profileData) => {
+    setProfileData(data)
+    setIsProfileModalOpen(false)
+    // In production, save to Supabase
+    console.log('Profile updated:', data)
   }
 
   return (
@@ -49,7 +67,11 @@ export default function Dashboard() {
                 </svg>
                 New Session
               </button>
-              <div className="w-10 h-10 bg-blue-600 dark:bg-blue-500 rounded-full flex items-center justify-center">
+              <div 
+                onClick={() => setIsProfileModalOpen(true)}
+                className="w-10 h-10 bg-blue-600 dark:bg-blue-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
+                title="View Profile"
+              >
                 <span className="text-white font-medium text-sm">SJ</span>
               </div>
             </div>
@@ -121,6 +143,14 @@ export default function Dashboard() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleAddSession}
+      />
+
+      {/* Profile Modal */}
+      <ProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        profileData={profileData}
+        onSave={handleSaveProfile}
       />
     </div>
   )

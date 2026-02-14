@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import AddSessionModal, { SessionFormData } from '@/components/AddSessionModal'
+import ProfileModal from '@/components/ProfileModal'
 import ThemeToggle from '@/components/ThemeToggle'
 import { useTheme } from '@/contexts/ThemeContext'
 
@@ -34,6 +35,27 @@ export default function SchedulePage() {
   const [showSessionDetails, setShowSessionDetails] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [sessionToDelete, setSessionToDelete] = useState<Session | null>(null)
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
+  
+  // Profile data based on view category
+  const [therapistProfile, setTherapistProfile] = useState({
+    name: 'Dr. Sarah Johnson',
+    email: 'sarah.johnson@therapyflow.com',
+    phone: '+1 (555) 123-4567',
+    specialty: 'Clinical Psychology, Cognitive Behavioral Therapy',
+    licenseNumber: 'PSY-12345-CA',
+    bio: 'Experienced clinical psychologist specializing in CBT and trauma-informed care. Over 10 years of experience helping clients overcome anxiety, depression, and PTSD.',
+    role: 'therapist' as const
+  })
+  
+  const [clientProfile, setClientProfile] = useState({
+    name: 'John Doe',
+    email: 'john.doe@email.com',
+    phone: '+1 (555) 987-6543',
+    role: 'client' as const
+  })
+  
+  const currentProfile = viewCategory === 'therapist' ? therapistProfile : clientProfile
 
   // Mock data - Therapist sessions (therapist's schedule)
   const [therapistSessions, setTherapistSessions] = useState<Session[]>([
@@ -208,6 +230,18 @@ export default function SchedulePage() {
     setShowSettingsPanel(!showSettingsPanel)
   }
 
+  const handleSaveProfile = (data: typeof currentProfile) => {
+    if (viewCategory === 'therapist') {
+      setTherapistProfile(data as typeof therapistProfile)
+    } else {
+      setClientProfile(data as typeof clientProfile)
+    }
+    setIsProfileModalOpen(false)
+    showToastMessage('Profile updated successfully!')
+    // In production, save to Supabase
+  }
+  }
+
   const showToastMessage = (message: string) => {
     setToastMessage(message)
     setShowToast(true)
@@ -327,6 +361,15 @@ export default function SchedulePage() {
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-r from-blue-400/0 via-blue-300/30 to-blue-400/0 blur-xl"></div>
                 </button>
               )}
+              <div 
+                onClick={() => setIsProfileModalOpen(true)}
+                className="w-10 h-10 bg-blue-600 dark:bg-blue-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
+                title="View Profile"
+              >
+                <span className="text-white font-medium text-sm">
+                  {viewCategory === 'therapist' ? 'SJ' : 'JD'}
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -1429,6 +1472,14 @@ export default function SchedulePage() {
           </div>
         </div>
       )}
+
+      {/* Profile Modal */}
+      <ProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        profileData={currentProfile}
+        onSave={handleSaveProfile}
+      />
     </div>
   )
 }
