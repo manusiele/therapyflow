@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import ThemeToggle from '@/components/ThemeToggle'
@@ -8,7 +7,6 @@ import { useTheme } from '@/contexts/ThemeContext'
 
 export default function Home() {
   const { theme } = useTheme()
-  const [showDemoDropdown, setShowDemoDropdown] = useState(false)
   
   return (
     <main className="min-h-screen">
@@ -107,61 +105,9 @@ export default function Home() {
               <Link href="/dashboard" className="btn-primary text-lg px-8 py-4">
                 Start Free Trial
               </Link>
-              <div 
-                className="relative"
-                onMouseEnter={() => setShowDemoDropdown(true)}
-                onMouseLeave={() => setShowDemoDropdown(false)}
-              >
-                <button className="btn-secondary text-lg px-8 py-4 w-full sm:w-auto flex items-center justify-center gap-2">
-                  View Demo
-                  <svg 
-                    className={`w-5 h-5 transition-transform ${showDemoDropdown ? 'rotate-180' : ''}`} 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                
-                {/* Dropdown Menu */}
-                {showDemoDropdown && (
-                  <div className="absolute top-full mt-2 left-0 right-0 bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden z-50 min-w-[200px]">
-                    <Link 
-                      href="/dashboard/schedule?view=therapist"
-                      className="block px-6 py-3 hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors border-b border-slate-100 dark:border-slate-700"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/50 rounded-lg flex items-center justify-center">
-                          <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                          </svg>
-                        </div>
-                        <div className="text-left">
-                          <div className="font-semibold text-slate-900 dark:text-slate-100">View as Therapist</div>
-                          <div className="text-xs text-slate-500 dark:text-slate-400">Full schedule management</div>
-                        </div>
-                      </div>
-                    </Link>
-                    <Link 
-                      href="/patient"
-                      className="block px-6 py-3 hover:bg-purple-50 dark:hover:bg-slate-700 transition-colors"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/50 rounded-lg flex items-center justify-center">
-                          <svg className="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                          </svg>
-                        </div>
-                        <div className="text-left">
-                          <div className="font-semibold text-slate-900 dark:text-slate-100">View as Client</div>
-                          <div className="text-xs text-slate-500 dark:text-slate-400">Patient portal view</div>
-                        </div>
-                      </div>
-                    </Link>
-                  </div>
-                )}
-              </div>
+              <Link href="/demo/therapist" className="btn-secondary text-lg px-8 py-4">
+                View Demo
+              </Link>
             </div>
           </div>
         </div>
