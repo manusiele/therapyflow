@@ -196,23 +196,93 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="bg-slate-900 dark:bg-slate-950 text-white px-6 py-12">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="flex items-center justify-center mb-4">
-            <Image 
-              src="/logo/logo-horizontal-dark.png"
-              alt="TherapyFlow" 
-              width={320}
-              height={64}
-              className="h-16 w-auto"
-            />
+        <div className="max-w-7xl mx-auto">
+          {/* Main Footer Content */}
+          <div className="grid md:grid-cols-3 gap-8 mb-8">
+            {/* Brand Section */}
+            <div>
+              <div className="flex items-center mb-4">
+                <Image 
+                  src="/logo/logo-horizontal-dark.png"
+                  alt="TherapyFlow" 
+                  width={240}
+                  height={48}
+                  className="h-12 w-auto"
+                />
+              </div>
+              <p className="text-slate-400 text-sm leading-relaxed">
+                Empowering mental health professionals with modern technology
+              </p>
+            </div>
+
+            {/* Quick Links */}
+            <div>
+              <h3 className="text-white font-semibold mb-4">Quick Links</h3>
+              <div className="space-y-2">
+                <a href="#" className="block text-slate-400 hover:text-white transition-colors text-sm">Privacy Policy</a>
+                <a href="#" className="block text-slate-400 hover:text-white transition-colors text-sm">Terms of Service</a>
+                <a href="#" className="block text-slate-400 hover:text-white transition-colors text-sm">Contact Support</a>
+                <a href="#" className="block text-slate-400 hover:text-white transition-colors text-sm">Documentation</a>
+              </div>
+            </div>
+
+            {/* Developer Info */}
+            <div>
+              <h3 className="text-white font-semibold mb-4">Developed By</h3>
+              <div className="space-y-3">
+                <div className="flex items-start space-x-3">
+                  <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-white font-medium text-sm">Manusiele</p>
+                    <p className="text-slate-400 text-xs">Full Stack Developer</p>
+                  </div>
+                </div>
+
+                <a 
+                  href="tel:+254707996059"
+                  className="flex items-center space-x-3 text-slate-400 hover:text-white transition-colors group"
+                >
+                  <div className="w-8 h-8 bg-slate-800 group-hover:bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                    </svg>
+                  </div>
+                  <span className="text-sm">+254 707 996 059</span>
+                </a>
+
+                <a 
+                  href="https://manusiele.kesug.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center space-x-3 text-slate-400 hover:text-white transition-colors group"
+                >
+                  <div className="w-8 h-8 bg-slate-800 group-hover:bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                    </svg>
+                  </div>
+                  <span className="text-sm">View Portfolio</span>
+                </a>
+              </div>
+            </div>
           </div>
-          <p className="text-slate-400 mb-6">
-            Empowering mental health professionals with modern technology
-          </p>
-          <div className="flex justify-center space-x-6 text-sm text-slate-400">
-            <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
-            <a href="#" className="hover:text-white transition-colors">Contact</a>
+
+          {/* Bottom Bar */}
+          <div className="pt-8 border-t border-slate-800 dark:border-slate-900">
+            <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+              <p className="text-slate-400 text-sm">
+                © {new Date().getFullYear()} TherapyFlow. All rights reserved.
+              </p>
+              <div className="flex items-center space-x-4">
+                <a href="https://manusiele.kesug.com/" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white transition-colors">
+                  <span className="text-xs">Crafted with ❤️ by Manusiele</span>
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </footer>
