@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import ThemeToggle from '@/components/ThemeToggle'
@@ -10,41 +10,94 @@ import AssessmentModal, { AssessmentData } from '@/components/AssessmentModal'
 import MoodTracker from '@/components/MoodTracker'
 import ResourcesPanel from '@/components/ResourcesPanel'
 import { useTheme } from '@/contexts/ThemeContext'
+import { useAuth } from '@/contexts/AuthContext'
+import { patients } from '@/lib/supabase'
 
 export default function PatientPortal() {
   const { theme } = useTheme()
+  const { user } = useAuth()
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
   const [isAssessmentModalOpen, setIsAssessmentModalOpen] = useState(false)
   const [showToast, setShowToast] = useState(false)
   const [toastMessage, setToastMessage] = useState('')
+  const [isLoading, setIsLoading] = useState(true)
   const [assessmentHistory, setAssessmentHistory] = useState<Array<{
     date: string
     assessmentType: string
     score: number
   }>>([])
   const [profileData, setProfileData] = useState({
-    name: 'John Doe',
-    email: 'john.doe@email.com',
-    phone: '+1 (555) 987-6543',
-    dateOfBirth: '1990-05-15',
-    emergencyContact: 'Jane Doe - (555) 123-4567',
+    name: 'Patient',
+    email: '',
+    phone: '',
+    dateOfBirth: '',
+    emergencyContact: '',
     role: 'client' as const
   })
 
-  const handleSaveProfile = (data: ProfileData) => {
-    setProfileData({
-      name: data.name,
-      email: data.email,
-      phone: data.phone,
-      dateOfBirth: data.dateOfBirth || '',
-      emergencyContact: data.emergencyContact || '',
-      role: 'client' as const
-    })
-    setIsProfileModalOpen(false)
-    showToastMessage('Profile updated successfully!')
-    // In production, save to Supabase
-    console.log('Profile updated:', data)
+  useEffect(() => {
+    const fetchPatientData = async () => {
+      if (!user?.email) return
+
+      try {
+        const { data, error } = await patients.getByEmail(user.email)
+        
+        if (error) {
+          console.error('Error fetching patient data:', error)
+          return
+        }
+
+        if (data) {
+          setProfileData({
+            name: data.name || 'Patient',
+            email: data.email || user.email,
+            phone: data.phone || '',
+            dateOfBirth: data.date_of_birth || '',
+            emergencyContact: data.emergency_contact || '',
+            role: 'client'
+          })
+        }
+      } catch (err) {
+        console.error('Error loading patient profile:', err)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchPatientData()
+  }, [user])
+
+  const handleSaveProfile = async (data: ProfileData) => {
+    if (!user?.email) return
+
+    try {
+      const { data: patientData } = await patients.getByEmail(user.email)
+      
+      if (patientData) {
+        await patients.update(patientData.id, {
+          name: data.name,
+          phone: data.phone,
+          date_of_birth: data.dateOfBirth,
+          emergency_contact: data.emergencyContact
+        })
+      }
+
+      setProfileData({
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        dateOfBirth: data.dateOfBirth || '',
+        emergencyContact: data.emergencyContact || '',
+        role: 'client' as const
+      })
+      setIsProfileModalOpen(false)
+      showToastMessage('Profile updated successfully!')
+      console.log('Profile updated:', data)
+    } catch (err) {
+      console.error('Error updating profile:', err)
+      showToastMessage('Failed to update profile')
+    }
   }
 
   const handleBookSession = (data: BookingData) => {
@@ -92,7 +145,9 @@ export default function PatientPortal() {
               </Link>
               <div className="border-l border-slate-300 dark:border-slate-600 pl-4">
                 <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Patient Portal</h1>
-                <p className="text-sm text-slate-600 dark:text-slate-400 mt-0.5">Welcome back, John</p>
+                <p className="text-sm text-slate-600 dark:text-slate-400 mt-0.5">
+                  {isLoading ? 'Loading...' : `Welcome back, ${profileData.name.split(' ')[0]}`}
+                </p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -119,7 +174,9 @@ export default function PatientPortal() {
                 className="w-10 h-10 bg-blue-600 dark:bg-blue-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
                 title="View Profile"
               >
-                <span className="text-white font-medium text-sm">JD</span>
+                <span className="text-white font-medium text-sm">
+                  {profileData.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+                </span>
               </div>
             </div>
           </div>
