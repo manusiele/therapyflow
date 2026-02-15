@@ -6,8 +6,10 @@ import Image from 'next/image'
 import AddSessionModal, { SessionFormData } from '@/components/AddSessionModal'
 import ProfileModal from '@/components/ProfileModal'
 import SessionNotes from '@/components/SessionNotes'
+import VideoCallModal from '@/components/VideoCallModal'
 import ThemeToggle from '@/components/ThemeToggle'
 import { useTheme } from '@/contexts/ThemeContext'
+import { generateRoomNameFromIds } from '@/lib/videoCall'
 
 interface Session {
   id: string
@@ -39,6 +41,8 @@ export default function SchedulePage() {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
   const [showSessionNotes, setShowSessionNotes] = useState(false)
   const [sessionForNotes, setSessionForNotes] = useState<Session | null>(null)
+  const [isVideoCallOpen, setIsVideoCallOpen] = useState(false)
+  const [videoCallSession, setVideoCallSession] = useState<Session | null>(null)
   
   // Profile data based on view category
   const [therapistProfile, setTherapistProfile] = useState({
@@ -1384,7 +1388,10 @@ export default function SchedulePage() {
               <div className="space-y-3 pt-2">
                 {/* Figure/Ground: Primary action stands out with stronger visual weight */}
                 <button 
-                  onClick={() => showToastMessage('Video call feature coming soon!')}
+                  onClick={() => {
+                    setVideoCallSession(selectedSession)
+                    setIsVideoCallOpen(true)
+                  }}
                   className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 dark:from-blue-500 dark:to-blue-600 dark:hover:from-blue-600 dark:hover:to-blue-700 text-white font-semibold py-4 px-6 rounded-xl transition-all shadow-lg hover:shadow-xl flex items-center justify-center space-x-2"
                   title="Join video call (Ctrl+V)"
                 >
@@ -1526,6 +1533,20 @@ export default function SchedulePage() {
             />
           </div>
         </div>
+      )}
+
+      {/* Video Call Modal */}
+      {isVideoCallOpen && videoCallSession && (
+        <VideoCallModal
+          isOpen={isVideoCallOpen}
+          onClose={() => {
+            setIsVideoCallOpen(false)
+            setVideoCallSession(null)
+          }}
+          roomName={generateRoomNameFromIds('therapist-id', videoCallSession.id, videoCallSession.time)}
+          displayName={viewCategory === 'therapist' ? therapistProfile.name : clientProfile.name}
+          userRole={viewCategory === 'therapist' ? 'therapist' : 'patient'}
+        />
       )}
     </div>
   )
