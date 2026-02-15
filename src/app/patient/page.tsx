@@ -7,6 +7,7 @@ import ThemeToggle from '@/components/ThemeToggle'
 import ProfileModal, { ProfileData } from '@/components/ProfileModal'
 import BookSessionModal, { BookingData } from '@/components/BookSessionModal'
 import AssessmentModal, { AssessmentData } from '@/components/AssessmentModal'
+import MessagesModal from '@/components/MessagesModal'
 import MoodTracker from '@/components/MoodTracker'
 import ResourcesPanel from '@/components/ResourcesPanel'
 import { useTheme } from '@/contexts/ThemeContext'
@@ -19,6 +20,7 @@ export default function PatientPortal() {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
   const [isAssessmentModalOpen, setIsAssessmentModalOpen] = useState(false)
+  const [isMessagesModalOpen, setIsMessagesModalOpen] = useState(false)
   const [showToast, setShowToast] = useState(false)
   const [toastMessage, setToastMessage] = useState('')
   const [isLoading, setIsLoading] = useState(true)
@@ -153,6 +155,7 @@ export default function PatientPortal() {
             <div className="flex items-center space-x-4">
               <ThemeToggle />
               <button 
+                onClick={() => setIsMessagesModalOpen(true)}
                 title="Messages"
                 className="group relative overflow-hidden bg-gradient-to-r from-purple-600 to-purple-700 dark:from-purple-500 dark:to-purple-600 hover:from-purple-700 hover:to-purple-800 dark:hover:from-purple-600 dark:hover:to-purple-700 text-white font-medium px-6 py-2.5 rounded-xl transition-all duration-200 shadow-lg shadow-purple-500/30 dark:shadow-purple-500/20 hover:shadow-xl hover:shadow-purple-500/40 dark:hover:shadow-purple-500/30 hover:scale-105 flex items-center"
               >
@@ -310,6 +313,13 @@ export default function PatientPortal() {
         isOpen={isAssessmentModalOpen}
         onClose={() => setIsAssessmentModalOpen(false)}
         onSubmit={handleTakeAssessment}
+      />
+
+      {/* Messages Modal */}
+      <MessagesModal
+        isOpen={isMessagesModalOpen}
+        onClose={() => setIsMessagesModalOpen(false)}
+        userRole="client"
       />
     </div>
   )
