@@ -1,0 +1,32 @@
+{
+  "name": "TherapyFlow - Mental Health Management",
+  "short_name": "TherapyFlow",
+  "description": "Streamline therapy sessions, track patient progress, and enhance mental health outcomes",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logo/logo-icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo/logo-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["health", "medical", "productivity"],
+  "screenshots": [
+    {
+      "src": "/logo/logo-horizontal.png",
+      "sizes": "1280x720",
+      "type": "image/png"
+    }
+  ]
+}

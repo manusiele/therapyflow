@@ -8,10 +8,26 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'TherapyFlow - Mental Health Management',
   description: 'Comprehensive therapy management platform for mental health professionals',
+  manifest: '/manifest.json',
   icons: {
     icon: '/logo/logo-icon.png',
     apple: '/logo/logo-icon.png',
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'TherapyFlow',
+  },
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+  },
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#2563eb' },
+    { media: '(prefers-color-scheme: dark)', color: '#0f172a' },
+  ],
 }
 
 export default function RootLayout({
