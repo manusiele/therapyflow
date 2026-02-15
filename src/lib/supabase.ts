@@ -257,6 +257,77 @@ export const sessions = {
   }
 }
 
+// Message operations
+export const messages = {
+  getConversations: async (userId: string, userType: 'therapist' | 'patient') => {
+    const { data, error } = await supabase
+      .from('conversations')
+      .select(`
+        *,
+        therapist:therapists(*),
+        patient:patients(*)
+      `)
+      .or(`therapist_id.eq.${userId},patient_id.eq.${userId}`)
+      .order('last_message_at', { ascending: false })
+    return { data, error }
+  },
+
+  getMessages: async (senderId: string, receiverId: string) => {
+    const { data, error } = await supabase
+      .from('messages')
+      .select('*')
+      .or(`and(sender_id.eq.${senderId},receiver_id.eq.${receiverId}),and(sender_id.eq.${receiverId},receiver_id.eq.${senderId})`)
+      .order('created_at', { ascending: true })
+    return { data, error }
+  },
+
+  sendMessage: async (message: {
+    sender_id: string
+    sender_type: 'therapist' | 'patient'
+    receiver_id: string
+    receiver_type: 'therapist' | 'patient'
+    content: string
+  }) => {
+    const { data, error } = await supabase
+      .from('messages')
+      .insert(message as any)
+      .select()
+      .single()
+    return { data, error }
+  },
+
+  markAsRead: async (messageId: string) => {
+    const { data, error } = await supabase
+      .from('messages')
+      .update({ is_read: true } as any)
+      .eq('id', messageId)
+      .select()
+      .single()
+    return { data, error }
+  },
+
+  getUnreadCount: async (userId: string) => {
+    const { count, error } = await supabase
+      .from('messages')
+      .select('*', { count: 'exact', head: true })
+      .eq('receiver_id', userId)
+      .eq('is_read', false)
+    return { count, error }
+  },
+
+  createConversation: async (therapistId: string, patientId: string) => {
+    const { data, error } = await supabase
+      .from('conversations')
+      .insert({
+        therapist_id: therapistId,
+        patient_id: patientId
+      } as any)
+      .select()
+      .single()
+    return { data, error }
+  }
+}
+
 // Assessment operations
 export const assessments = {
   getAll: async (patientId?: string) => {
