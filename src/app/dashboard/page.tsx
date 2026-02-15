@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import SessionOverview from '@/components/SessionOverview'
 import PatientProgress from '@/components/PatientProgress'
@@ -8,20 +8,57 @@ import AddSessionModal, { SessionFormData } from '@/components/AddSessionModal'
 import ProfileModal from '@/components/ProfileModal'
 import ThemeToggle from '@/components/ThemeToggle'
 import { useTheme } from '@/contexts/ThemeContext'
+import { useAuth } from '@/contexts/AuthContext'
+import { therapists } from '@/lib/supabase'
 
 export default function Dashboard() {
   const { theme } = useTheme()
+  const { user } = useAuth()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const [profileData, setProfileData] = useState({
-    name: 'Dr. Sarah Johnson',
-    email: 'sarah.johnson@therapyflow.com',
-    phone: '+1 (555) 123-4567',
-    specialization: 'Clinical Psychology, Cognitive Behavioral Therapy',
-    licenseNumber: 'PSY-12345-CA',
-    bio: 'Experienced clinical psychologist specializing in CBT and trauma-informed care. Over 10 years of experience helping clients overcome anxiety, depression, and PTSD.',
+    name: 'Therapist',
+    email: '',
+    phone: '',
+    specialization: '',
+    licenseNumber: '',
+    bio: '',
     role: 'therapist' as const
   })
+
+  useEffect(() => {
+    const fetchTherapistData = async () => {
+      if (!user?.email) return
+
+      try {
+        const { data, error } = await therapists.getByEmail(user.email)
+        
+        if (error) {
+          console.error('Error fetching therapist data:', error)
+          return
+        }
+
+        if (data) {
+          setProfileData({
+            name: data.name || 'Therapist',
+            email: data.email || user.email,
+            phone: data.phone || '',
+            specialization: data.specialization || '',
+            licenseNumber: data.license_number || '',
+            bio: data.bio || '',
+            role: 'therapist'
+          })
+        }
+      } catch (err) {
+        console.error('Error loading therapist profile:', err)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchTherapistData()
+  }, [user])
 
   const handleAddSession = (sessionData: SessionFormData) => {
     // In production, this would dispatch to Redux and save to Supabase
@@ -29,11 +66,28 @@ export default function Dashboard() {
     // Show success notification, refresh data, etc.
   }
 
-  const handleSaveProfile = (data: typeof profileData) => {
-    setProfileData(data)
-    setIsProfileModalOpen(false)
-    // In production, save to Supabase
-    console.log('Profile updated:', data)
+  const handleSaveProfile = async (data: typeof profileData) => {
+    if (!user?.email) return
+
+    try {
+      const { data: therapistData } = await therapists.getByEmail(user.email)
+      
+      if (therapistData) {
+        await therapists.update(therapistData.id, {
+          name: data.name,
+          phone: data.phone,
+          specialization: data.specialization,
+          license_number: data.licenseNumber,
+          bio: data.bio
+        })
+      }
+
+      setProfileData(data)
+      setIsProfileModalOpen(false)
+      console.log('Profile updated:', data)
+    } catch (err) {
+      console.error('Error updating profile:', err)
+    }
   }
 
   return (
@@ -53,7 +107,9 @@ export default function Dashboard() {
               />
               <div className="border-l border-slate-300 dark:border-slate-600 pl-4">
                 <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Dashboard</h1>
-                <p className="text-sm text-slate-600 dark:text-slate-400 mt-0.5">Welcome back, Dr. Sarah Johnson</p>
+                <p className="text-sm text-slate-600 dark:text-slate-400 mt-0.5">
+                  {isLoading ? 'Loading...' : `Welcome back, ${profileData.name}`}
+                </p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -81,7 +137,9 @@ export default function Dashboard() {
                 className="w-10 h-10 bg-blue-600 dark:bg-blue-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
                 title="View Profile"
               >
-                <span className="text-white font-medium text-sm">SJ</span>
+                <span className="text-white font-medium text-sm">
+                  {profileData.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+                </span>
               </div>
             </div>
           </div>
