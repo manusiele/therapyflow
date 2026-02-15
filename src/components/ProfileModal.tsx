@@ -6,9 +6,11 @@ interface ProfileData {
   name: string
   email: string
   phone: string
-  specialization?: string  // Changed from specialty to match SQL schema
-  licenseNumber?: string
-  bio?: string
+  specialization?: string  // For therapists
+  licenseNumber?: string   // For therapists
+  bio?: string             // For therapists
+  dateOfBirth?: string     // For patients (from SQL: date_of_birth)
+  emergencyContact?: string // For patients (from SQL: emergency_contact)
   role: 'therapist' | 'client'
 }
 
@@ -176,6 +178,42 @@ export default function ProfileModal({ isOpen, onClose, profileData, onSave }: P
                   rows={4}
                   placeholder="Tell us about your experience and approach..."
                   className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 disabled:bg-slate-50 dark:disabled:bg-slate-800 disabled:cursor-not-allowed resize-none"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Patient Information (Client only) */}
+          {formData.role === 'client' && (
+            <div className="space-y-4 pt-4 border-t border-slate-200 dark:border-slate-700">
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+                Additional Information
+              </h3>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                  Date of Birth
+                </label>
+                <input
+                  type="date"
+                  value={formData.dateOfBirth || ''}
+                  onChange={(e) => setFormData({ ...formData, dateOfBirth: e.target.value })}
+                  disabled={!isEditing}
+                  className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 disabled:bg-slate-50 dark:disabled:bg-slate-800 disabled:cursor-not-allowed"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                  Emergency Contact
+                </label>
+                <input
+                  type="text"
+                  value={formData.emergencyContact || ''}
+                  onChange={(e) => setFormData({ ...formData, emergencyContact: e.target.value })}
+                  disabled={!isEditing}
+                  placeholder="Name - Phone Number"
+                  className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 disabled:bg-slate-50 dark:disabled:bg-slate-800 disabled:cursor-not-allowed"
                 />
               </div>
             </div>

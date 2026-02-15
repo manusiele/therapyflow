@@ -1,12 +1,30 @@
 'use client'
 
+import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import ThemeToggle from '@/components/ThemeToggle'
+import ProfileModal from '@/components/ProfileModal'
 import { useTheme } from '@/contexts/ThemeContext'
 
 export default function PatientPortal() {
   const { theme } = useTheme()
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
+  const [profileData, setProfileData] = useState({
+    name: 'John Doe',
+    email: 'john.doe@email.com',
+    phone: '+1 (555) 987-6543',
+    dateOfBirth: '1990-05-15',
+    emergencyContact: 'Jane Doe - (555) 123-4567',
+    role: 'client' as const
+  })
+
+  const handleSaveProfile = (data: typeof profileData) => {
+    setProfileData(data)
+    setIsProfileModalOpen(false)
+    // In production, save to Supabase
+    console.log('Profile updated:', data)
+  }
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
@@ -49,7 +67,11 @@ export default function PatientPortal() {
                 {/* Glow effect */}
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-r from-purple-400/0 via-purple-300/30 to-purple-400/0 blur-xl"></div>
               </button>
-              <div className="w-10 h-10 bg-blue-600 dark:bg-blue-500 rounded-full flex items-center justify-center">
+              <div 
+                onClick={() => setIsProfileModalOpen(true)}
+                className="w-10 h-10 bg-blue-600 dark:bg-blue-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
+                title="View Profile"
+              >
                 <span className="text-white font-medium text-sm">JD</span>
               </div>
             </div>
@@ -226,6 +248,14 @@ export default function PatientPortal() {
           </div>
         </div>
       </main>
+
+      {/* Profile Modal */}
+      <ProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        profileData={profileData}
+        onSave={handleSaveProfile}
+      />
     </div>
   )
 }
