@@ -19,12 +19,15 @@ export type AssessmentInsert = Database['public']['Tables']['assessments']['Inse
 
 // Authentication helpers
 export const auth = {
-  signUp: async (email: string, password: string, metadata: { name: string; role: 'therapist' | 'client' }) => {
+  signUp: async (email: string, password: string, role: 'therapist' | 'client', profileData: any) => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: metadata
+        data: {
+          role,
+          ...profileData
+        }
       }
     })
     return { data, error }

@@ -43,9 +43,9 @@ export default function PatientSignupPage() {
       const { data: authData, error: authError } = await auth.signUp(
         formData.email,
         formData.password,
+        'client',
         {
-          name: formData.name,
-          role: 'client'
+          fullName: formData.name
         }
       )
       

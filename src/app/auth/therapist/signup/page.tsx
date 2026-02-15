@@ -43,9 +43,9 @@ export default function TherapistSignupPage() {
       const { data: authData, error: authError } = await auth.signUp(
         formData.email,
         formData.password,
+        'therapist',
         {
-          name: formData.name,
-          role: 'therapist'
+          fullName: formData.name
         }
       )
       
