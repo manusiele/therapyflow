@@ -28,12 +28,64 @@ export default function Home() {
             </Link>
             <div className="flex items-center space-x-4">
               <ThemeToggle />
-              <Link href="/dashboard" className="btn-secondary">
-                For Therapists
-              </Link>
-              <Link href="/patient" className="btn-primary">
-                Patient Portal
-              </Link>
+              <div className="relative group">
+                <button className="text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">
+                  Sign In
+                </button>
+                <div className="absolute top-full right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-slate-200 dark:border-slate-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                  <Link 
+                    href="/auth/therapist/login"
+                    className="block px-4 py-3 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors border-b border-slate-100 dark:border-slate-700"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <svg className="w-4 h-4 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      <span className="text-sm font-medium text-slate-900 dark:text-slate-100">Therapist</span>
+                    </div>
+                  </Link>
+                  <Link 
+                    href="/auth/patient/login"
+                    className="block px-4 py-3 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                      <span className="text-sm font-medium text-slate-900 dark:text-slate-100">Patient</span>
+                    </div>
+                  </Link>
+                </div>
+              </div>
+              <div className="relative group">
+                <button className="btn-primary">
+                  Get Started
+                </button>
+                <div className="absolute top-full right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-slate-200 dark:border-slate-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                  <Link 
+                    href="/auth/therapist/signup"
+                    className="block px-4 py-3 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors border-b border-slate-100 dark:border-slate-700"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <svg className="w-4 h-4 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      <span className="text-sm font-medium text-slate-900 dark:text-slate-100">As Therapist</span>
+                    </div>
+                  </Link>
+                  <Link 
+                    href="/auth/patient/signup"
+                    className="block px-4 py-3 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                      <span className="text-sm font-medium text-slate-900 dark:text-slate-100">As Patient</span>
+                    </div>
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </div>
