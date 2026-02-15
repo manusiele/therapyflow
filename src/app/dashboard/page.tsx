@@ -6,6 +6,8 @@ import SessionOverview from '@/components/SessionOverview'
 import PatientProgress from '@/components/PatientProgress'
 import AddSessionModal, { SessionFormData } from '@/components/AddSessionModal'
 import ProfileModal from '@/components/ProfileModal'
+import PatientManagementModal from '@/components/PatientManagementModal'
+import CalendarIntegrationModal from '@/components/CalendarIntegrationModal'
 import ThemeToggle from '@/components/ThemeToggle'
 import { useTheme } from '@/contexts/ThemeContext'
 import { useAuth } from '@/contexts/AuthContext'
@@ -16,6 +18,8 @@ export default function Dashboard() {
   const { user } = useAuth()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
+  const [isPatientManagementOpen, setIsPatientManagementOpen] = useState(false)
+  const [isCalendarIntegrationOpen, setIsCalendarIntegrationOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [profileData, setProfileData] = useState({
     name: 'Therapist',
@@ -150,13 +154,16 @@ export default function Dashboard() {
       <main className="max-w-7xl mx-auto px-6 py-8">
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div 
+            onClick={() => setIsPatientManagementOpen(true)}
+            className="card text-center cursor-pointer hover:shadow-lg transition-shadow"
+          >
+            <div className="text-2xl font-bold text-purple-600 dark:text-purple-400 mb-1">24</div>
+            <div className="text-sm text-slate-600 dark:text-slate-400">Active Patients</div>
+          </div>
           <div className="card text-center">
             <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-1">8</div>
             <div className="text-sm text-slate-600 dark:text-slate-400">Today's Sessions</div>
-          </div>
-          <div className="card text-center">
-            <div className="text-2xl font-bold text-purple-600 dark:text-purple-400 mb-1">24</div>
-            <div className="text-sm text-slate-600 dark:text-slate-400">Active Patients</div>
           </div>
           <div className="card text-center">
             <div className="text-2xl font-bold text-green-600 dark:text-green-400 mb-1">92%</div>
@@ -166,6 +173,43 @@ export default function Dashboard() {
             <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400 mb-1">3</div>
             <div className="text-sm text-slate-600 dark:text-slate-400">Pending Notes</div>
           </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <button
+            onClick={() => setIsPatientManagementOpen(true)}
+            className="card hover:shadow-lg transition-all group text-left"
+          >
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/50 rounded-lg flex items-center justify-center group-hover:bg-purple-200 dark:group-hover:bg-purple-800/50 transition-colors">
+                <svg className="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-semibold text-slate-900 dark:text-slate-100">Patient Management</h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400">View and manage patient profiles</p>
+              </div>
+            </div>
+          </button>
+
+          <button
+            onClick={() => setIsCalendarIntegrationOpen(true)}
+            className="card hover:shadow-lg transition-all group text-left"
+          >
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/50 rounded-lg flex items-center justify-center group-hover:bg-blue-200 dark:group-hover:bg-blue-800/50 transition-colors">
+                <svg className="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-semibold text-slate-900 dark:text-slate-100">Calendar Integration</h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400">Sync with Google, Outlook, Apple</p>
+              </div>
+            </div>
+          </button>
         </div>
 
         {/* Dashboard Widgets */}
@@ -218,6 +262,18 @@ export default function Dashboard() {
         onClose={() => setIsProfileModalOpen(false)}
         profileData={profileData}
         onSave={handleSaveProfile}
+      />
+
+      {/* Patient Management Modal */}
+      <PatientManagementModal
+        isOpen={isPatientManagementOpen}
+        onClose={() => setIsPatientManagementOpen(false)}
+      />
+
+      {/* Calendar Integration Modal */}
+      <CalendarIntegrationModal
+        isOpen={isCalendarIntegrationOpen}
+        onClose={() => setIsCalendarIntegrationOpen(false)}
       />
     </div>
   )
