@@ -16,6 +16,49 @@ export default function TherapistLoginPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
 
+  const handleDemoLogin = async () => {
+    setIsLoading(true)
+    setError('')
+
+    try {
+      const demoEmail = `demo.therapist.${Date.now()}@therapyflow.demo`
+      const demoPassword = 'DemoPassword123!'
+
+      // Create demo account
+      const { data: signUpData, error: signUpError } = await auth.signUp(
+        demoEmail,
+        demoPassword,
+        'therapist',
+        {
+          fullName: 'Dr. Demo Therapist',
+          specialization: 'Clinical Psychology',
+          licenseNumber: 'DEMO-' + Math.random().toString(36).substr(2, 9).toUpperCase(),
+          bio: 'Demo therapist account for testing and exploration'
+        }
+      )
+
+      if (signUpError) {
+        setError('Failed to create demo account: ' + signUpError.message)
+        setIsLoading(false)
+        return
+      }
+
+      // Sign in with demo account
+      const { data: authData, error: authError } = await auth.signIn(demoEmail, demoPassword)
+      
+      if (authError) {
+        setError('Failed to sign in with demo account: ' + authError.message)
+        setIsLoading(false)
+        return
+      }
+
+      router.push('/dashboard')
+    } catch (err) {
+      setError('An unexpected error occurred creating demo account.')
+      setIsLoading(false)
+    }
+  }
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
@@ -154,6 +197,29 @@ export default function TherapistLoginPage() {
               )}
             </button>
           </form>
+
+          <div className="mt-4">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-300 dark:border-slate-600"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400">Or</span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleDemoLogin}
+              disabled={isLoading}
+              className="mt-4 w-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 font-medium py-3 px-4 rounded-xl transition-all border border-slate-300 dark:border-slate-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              <span>Skip Login (Demo Mode)</span>
+            </button>
+          </div>
 
           <div className="mt-6 text-center">
             <p className="text-sm text-slate-600 dark:text-slate-400">
