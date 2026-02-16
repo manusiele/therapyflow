@@ -50,21 +50,26 @@
 ---
 
 ### 4. Video Call Integration ✅
-**Status**: Fully Implemented (Jitsi Meet)
-- HD video/audio conferencing
+**Status**: Fully Implemented (Daily.co)
+- HD video/audio conferencing with adaptive bitrate
 - Screen sharing capability
 - End-to-end encryption
-- Pre-join lobby
+- Pre-join preview
 - No time limits
-- HIPAA-ready configuration
-- Self-hosting documentation
+- HIPAA-compliant infrastructure
+- Global CDN (excellent performance in Kenya/Nairobi)
+- Free tier: 10,000 participant minutes/month
+- Zero setup required
+- No hosting costs
 
 **Files**:
 - `src/components/VideoCallModal.tsx`
 - `src/lib/videoCall.ts`
 - `VIDEO_CALL_SETUP.md`
 
-**Technology**: Jitsi Meet (Free & Open Source)
+**Technology**: Daily.co (Hosted Prebuilt)
+**Subdomain**: manusiele.daily.co
+**Cost**: $0/month (free tier) - Supports ~100 sessions/month
 
 ---
 
@@ -303,14 +308,18 @@
 
 ---
 
-## 🔒 Security & Compliance
+## 🔒 Security & Privacy
 
-- ✅ HIPAA-ready architecture
 - ✅ End-to-end encryption (video calls)
-- ✅ Row Level Security (database)
+- ✅ HIPAA-compliant video infrastructure (Daily.co)
 - ✅ Secure authentication
+- ✅ Row Level Security (database)
 - ✅ Data encryption in transit (HTTPS)
 - ✅ Privacy-focused design
+- ✅ No data storage in video calls (unless recording enabled)
+- ✅ Business Associate Agreement (BAA) available from Daily.co
+
+**Note**: Daily.co is HIPAA-compliant and provides BAA for healthcare applications. Consult with your legal/compliance team for specific requirements.
 
 ---
 
@@ -349,26 +358,35 @@
 
 ## 💰 Cost Estimate (Monthly)
 
-### Free Tier (Testing):
+### Free Tier (All Features):
 - Supabase: Free (500MB database, 2GB bandwidth)
-- Jitsi: Free (public server)
+- Daily.co: Free (10,000 participant minutes ≈ 100 sessions)
 - SendGrid: Free (100 emails/day)
 - Twilio: $15 trial credit
 - **Total: $0/month**
 
-### Small Practice (100 patients):
+### Small Practice (100 patients, ~100 sessions/month):
 - Supabase: Free tier sufficient
-- Jitsi: Free (public) or $10-20 (self-hosted VPS)
+- Daily.co: Free tier sufficient (10,000 minutes)
 - SendGrid: Free tier sufficient
 - Twilio: ~$4/month
-- **Total: $4-24/month**
+- **Total: $4/month**
 
-### Medium Practice (500 patients):
+### Medium Practice (500 patients, ~250 sessions/month):
 - Supabase: $25/month (Pro plan)
-- Jitsi: $20-50/month (self-hosted)
+- Daily.co: $99/month (Starter plan - 50,000 minutes)
 - SendGrid: $19.95/month
 - Twilio: ~$36/month
-- **Total: $100-130/month**
+- **Total: $180/month**
+
+### Large Practice (1000+ patients, ~500 sessions/month):
+- Supabase: $25/month (Pro plan)
+- Daily.co: $299/month (Growth plan - 200,000 minutes)
+- SendGrid: $19.95/month
+- Twilio: ~$72/month
+- **Total: $416/month**
+
+**Note**: Video calls use Daily.co's free tier (10,000 participant minutes/month). Each 50-minute 1-on-1 session = 100 participant minutes.
 
 ---
 
@@ -401,16 +419,16 @@
 
 ## 🎯 Next Steps for Production
 
-1. **Self-host Jitsi Meet** for HIPAA compliance
-2. **Set up SendGrid** with verified domain
-3. **Configure Twilio** for SMS
-4. **Enable OAuth** for calendar sync
-5. **Add chart library** (Chart.js or Recharts)
-6. **Set up monitoring** (Sentry, LogRocket)
-7. **Configure backups** (automated database backups)
-8. **SSL certificate** (Let's Encrypt)
-9. **Domain setup** (custom domain)
-10. **HIPAA compliance audit**
+1. **Configure SendGrid** with verified domain for email notifications
+2. **Set up Twilio** for SMS notifications
+3. **Enable OAuth** for calendar sync (Google/Outlook/Apple)
+4. **Add chart library** (Chart.js or Recharts) for analytics
+5. **Set up monitoring** (Sentry, LogRocket)
+6. **Configure backups** (automated database backups)
+7. **SSL certificate** (Let's Encrypt or hosting provider)
+8. **Domain setup** (custom domain)
+9. **Privacy policy** (update for your jurisdiction)
+10. **Terms of service** (legal compliance)
 
 ---
 
