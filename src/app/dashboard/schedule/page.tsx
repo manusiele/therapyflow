@@ -611,7 +611,23 @@ export default function SchedulePage() {
                 </>
               )}
             </>
-          ) : (>
+          ) : (
+            /* Week View */
+            <div className="card">
+              <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-6">
+                Week Overview
+              </h2>
+              
+              <div className="space-y-3">
+                {sessions.map((session) => (
+                  <div 
+                    key={session.id}
+                    onClick={() => handleSessionClick(session)}
+                    className="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer border border-slate-200 dark:border-slate-600"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-4 flex-1">
+                        <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center flex-shrink-0">
                               <span className="text-blue-700 dark:text-blue-300 font-medium text-sm">
                                 {session.patient.split(' ').map(n => n[0]).join('')}
                               </span>
