@@ -184,27 +184,18 @@ export default function PatientPortal() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
       {/* Header */}
       <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
-          <div className="flex justify-between items-center gap-3">
-            {/* Logo and Title Section */}
-            <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
-              <Link href="/" className="flex-shrink-0">
-                <Image 
-                  src={theme === 'dark' ? '/logo/logo-horizontal-dark.png' : '/logo/logo-horizontal.png'}
-                  alt="TherapyFlow" 
-                  width={320}
-                  height={64}
-                  className="h-10 sm:h-12 md:h-16 w-auto cursor-pointer hover:opacity-80 transition-opacity"
-                  priority
-                />
-              </Link>
-              <div className="hidden sm:block border-l border-slate-300 dark:border-slate-600 pl-2 sm:pl-4 min-w-0">
-                <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-100 truncate">Patient Portal</h1>
-                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-0.5 truncate">
-                  {isLoading ? 'Loading...' : `Welcome back, ${profileData.name.split(' ')[0]}`}
-                </p>
-              </div>
-            </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+          <div className="flex justify-between items-center">
+            <Link href="/patient">
+              <Image 
+                src={theme === 'dark' ? '/logo/logo-horizontal-dark.png' : '/logo/logo-horizontal.png'}
+                alt="TherapyFlow" 
+                width={320}
+                height={64}
+                className="h-12 sm:h-14 w-auto cursor-pointer hover:opacity-80 transition-opacity"
+                priority
+              />
+            </Link>
 
             {/* Actions Section */}
             <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
@@ -232,21 +223,13 @@ export default function PatientPortal() {
               <button 
                 onClick={() => setIsProfileModalOpen(true)}
                 className="w-9 h-9 bg-blue-600 dark:bg-blue-500 rounded-full flex items-center justify-center hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
-                title="Profile"
+                title={`${profileData.name} - View Profile`}
               >
                 <span className="text-white font-medium text-sm">
                   {profileData.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
                 </span>
               </button>
             </div>
-          </div>
-
-          {/* Mobile Title - Shows below logo on small screens */}
-          <div className="sm:hidden mt-3 pt-3 border-t border-slate-200 dark:border-slate-700">
-            <h1 className="text-lg font-bold text-slate-900 dark:text-slate-100">Patient Portal</h1>
-            <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
-              {isLoading ? 'Loading...' : `Welcome back, ${profileData.name.split(' ')[0]}`}
-            </p>
           </div>
         </div>
       </header>

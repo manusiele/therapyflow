@@ -362,26 +362,18 @@ export default function SchedulePage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
       {/* Header */}
       <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-2 sm:space-x-4">
-              <Link href="/dashboard">
-                <Image 
-                  src={theme === 'dark' ? '/logo/logo-horizontal-dark.png' : '/logo/logo-horizontal.png'}
-                  alt="TherapyFlow" 
-                  width={550}
-                  height={700}
-                  className="h-12 sm:h-[70px] w-auto cursor-pointer hover:opacity-80 transition-opacity"
-                  priority
-                />
-              </Link>
-              <div className="border-l border-slate-300 dark:border-slate-600 pl-2 sm:pl-4">
-                <h1 className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-slate-100">Full Schedule</h1>
-                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-0.5 hidden sm:block">
-                  {formatDate(selectedDate)} • {viewCategory === 'therapist' ? 'Therapist View' : 'Client View'}
-                </p>
-              </div>
-            </div>
+            <Link href="/dashboard">
+              <Image 
+                src={theme === 'dark' ? '/logo/logo-horizontal-dark.png' : '/logo/logo-horizontal.png'}
+                alt="TherapyFlow" 
+                width={550}
+                height={700}
+                className="h-12 sm:h-14 w-auto cursor-pointer hover:opacity-80 transition-opacity"
+                priority
+              />
+            </Link>
             <div className="flex items-center space-x-2 sm:space-x-3">
               <button
                 onClick={toggleTheme}
@@ -409,7 +401,7 @@ export default function SchedulePage() {
               <button 
                 onClick={() => setIsProfileModalOpen(true)}
                 className="w-9 h-9 bg-blue-600 dark:bg-blue-500 rounded-full flex items-center justify-center hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
-                title="Profile"
+                title={`${viewCategory === 'therapist' ? 'Dr. Sarah Johnson' : 'John Doe'} - View Profile`}
               >
                 <span className="text-white font-medium text-sm">
                   {viewCategory === 'therapist' ? 'SJ' : 'JD'}
