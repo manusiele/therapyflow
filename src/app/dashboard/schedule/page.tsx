@@ -23,7 +23,7 @@ interface Session {
 
 export default function SchedulePage() {
   const router = useRouter()
-  const { theme } = useTheme()
+  const { theme, toggleTheme } = useTheme()
   const { user } = useAuth()
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [view, setView] = useState<'day' | 'week'>('day')
@@ -382,37 +382,39 @@ export default function SchedulePage() {
                 </p>
               </div>
             </div>
-            <div className="flex items-center space-x-2 sm:space-x-4">
-              <ThemeToggle />
+            <div className="flex items-center space-x-2 sm:space-x-3">
+              <button
+                onClick={toggleTheme}
+                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+                title="Toggle theme"
+              >
+                <svg className="w-5 h-5 text-slate-600 dark:text-slate-400 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                <svg className="w-5 h-5 text-slate-600 dark:text-slate-400 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+              </button>
               {viewCategory === 'therapist' && (
                 <button 
                   onClick={() => setIsModalOpen(true)}
                   title="New Session (Ctrl+N)"
-                  className="group relative overflow-hidden bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-500 dark:to-blue-600 hover:from-blue-700 hover:to-blue-800 dark:hover:from-blue-600 dark:hover:to-blue-700 text-white font-medium px-3 sm:px-6 py-2 sm:py-2.5 rounded-xl transition-all duration-200 shadow-lg shadow-blue-500/30 dark:shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/40 dark:hover:shadow-blue-500/30 hover:scale-105 flex items-center"
+                  className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
                 >
-                  <div className="relative z-10 flex items-center">
-                    <div className="w-6 h-6 sm:w-8 sm:h-8 bg-white/20 rounded-lg flex items-center justify-center sm:mr-2.5 group-hover:bg-white/30 transition-colors">
-                      <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                      </svg>
-                    </div>
-                    <span className="hidden sm:inline text-[15px]">New Session</span>
-                  </div>
-                  {/* Shimmer effect */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
-                  {/* Glow effect */}
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-r from-blue-400/0 via-blue-300/30 to-blue-400/0 blur-xl"></div>
+                  <svg className="w-5 h-5 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
                 </button>
               )}
-              <div 
+              <button 
                 onClick={() => setIsProfileModalOpen(true)}
-                className="w-10 h-10 bg-blue-600 dark:bg-blue-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
-                title="View Profile"
+                className="w-9 h-9 bg-blue-600 dark:bg-blue-500 rounded-full flex items-center justify-center hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
+                title="Profile"
               >
                 <span className="text-white font-medium text-sm">
                   {viewCategory === 'therapist' ? 'SJ' : 'JD'}
                 </span>
-              </div>
+              </button>
             </div>
           </div>
         </div>
