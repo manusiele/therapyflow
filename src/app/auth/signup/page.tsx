@@ -188,40 +188,88 @@ export default function SignupPage() {
 
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
-                I am a:
+                Account Type <span className="text-red-500">*</span>
               </label>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-3">
                 <button
                   type="button"
                   onClick={() => setFormData({ ...formData, role: 'client' })}
-                  className={`p-4 rounded-lg border-2 transition-all ${
+                  className={`w-full p-4 rounded-xl border-2 transition-all text-left ${
                     formData.role === 'client'
-                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                      : 'border-slate-300 dark:border-slate-600 hover:border-blue-300 dark:hover:border-blue-700'
+                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 shadow-md'
+                      : 'border-slate-300 dark:border-slate-600 hover:border-blue-300 dark:hover:border-blue-700 hover:bg-slate-50 dark:hover:bg-slate-700/50'
                   }`}
                 >
-                  <div className="text-center">
-                    <svg className="w-8 h-8 mx-auto mb-2 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                    <span className="text-sm font-medium text-slate-900 dark:text-slate-100">Patient</span>
+                  <div className="flex items-start space-x-4">
+                    <div className={`w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                      formData.role === 'client'
+                        ? 'bg-blue-100 dark:bg-blue-900/50'
+                        : 'bg-slate-100 dark:bg-slate-700'
+                    }`}>
+                      <svg className={`w-6 h-6 ${
+                        formData.role === 'client'
+                          ? 'text-blue-600 dark:text-blue-400'
+                          : 'text-slate-600 dark:text-slate-400'
+                      }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-1">
+                        <h3 className="font-semibold text-slate-900 dark:text-slate-100">Patient</h3>
+                        {formData.role === 'client' && (
+                          <div className="w-5 h-5 bg-blue-600 dark:bg-blue-500 rounded-full flex items-center justify-center">
+                            <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                        )}
+                      </div>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">
+                        Book sessions, track progress, and access wellness resources
+                      </p>
+                    </div>
                   </div>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setFormData({ ...formData, role: 'therapist' })}
-                  className={`p-4 rounded-lg border-2 transition-all ${
+                  className={`w-full p-4 rounded-xl border-2 transition-all text-left ${
                     formData.role === 'therapist'
-                      ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20'
-                      : 'border-slate-300 dark:border-slate-600 hover:border-purple-300 dark:hover:border-purple-700'
+                      ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20 shadow-md'
+                      : 'border-slate-300 dark:border-slate-600 hover:border-purple-300 dark:hover:border-purple-700 hover:bg-slate-50 dark:hover:bg-slate-700/50'
                   }`}
                 >
-                  <div className="text-center">
-                    <svg className="w-8 h-8 mx-auto mb-2 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    <span className="text-sm font-medium text-slate-900 dark:text-slate-100">Therapist</span>
+                  <div className="flex items-start space-x-4">
+                    <div className={`w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                      formData.role === 'therapist'
+                        ? 'bg-purple-100 dark:bg-purple-900/50'
+                        : 'bg-slate-100 dark:bg-slate-700'
+                    }`}>
+                      <svg className={`w-6 h-6 ${
+                        formData.role === 'therapist'
+                          ? 'text-purple-600 dark:text-purple-400'
+                          : 'text-slate-600 dark:text-slate-400'
+                      }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-1">
+                        <h3 className="font-semibold text-slate-900 dark:text-slate-100">Therapist</h3>
+                        {formData.role === 'therapist' && (
+                          <div className="w-5 h-5 bg-purple-600 dark:bg-purple-500 rounded-full flex items-center justify-center">
+                            <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                        )}
+                      </div>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">
+                        Manage patients, schedule sessions, and track clinical outcomes
+                      </p>
+                    </div>
                   </div>
                 </button>
               </div>
