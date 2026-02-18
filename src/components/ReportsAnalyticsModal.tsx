@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { sessions, patients, therapists } from '@/lib/supabase'
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 
 interface ReportsAnalyticsModalProps {
   isOpen: boolean
@@ -177,9 +179,229 @@ export default function ReportsAnalyticsModal({
   }, [isOpen, userRole, user])
 
   const handleExport = () => {
-    console.log(`Exporting ${selectedReport} as ${exportFormat}`)
-    // In production, generate and download report
-    alert(`Report exported as ${exportFormat.toUpperCase()}`)
+    if (exportFormat === 'pdf') {
+      exportToPDF()
+    } else if (exportFormat === 'csv') {
+      exportToCSV()
+    } else if (exportFormat === 'excel') {
+      exportToExcel()
+    }
+  }
+
+  const exportToPDF = () => {
+    const doc = new jsPDF()
+    const currentDate = new Date().toLocaleDateString()
+    
+    // Add header
+    doc.setFontSize(20)
+    doc.text('TherapyFlow Report', 14, 20)
+    doc.setFontSize(10)
+    doc.text(`Generated: ${currentDate}`, 14, 28)
+    doc.text(`Report Type: ${selectedReport.charAt(0).toUpperCase() + selectedReport.slice(1)}`, 14, 34)
+    doc.text(`Date Range: ${dateRange}`, 14, 40)
+    
+    if (userRole === 'therapist') {
+      // Therapist report
+      doc.setFontSize(14)
+      doc.text('Practice Overview', 14, 52)
+      
+      // Stats table
+      autoTable(doc, {
+        startY: 58,
+        head: [['Metric', 'Value']],
+        body: [
+          ['Total Sessions', therapistStats.totalSessions.toString()],
+          ['Completed Sessions', therapistStats.completedSessions.toString()],
+          ['Cancelled Sessions', therapistStats.cancelledSessions.toString()],
+          ['Active Patients', therapistStats.activePatients.toString()],
+          ['Average Session Duration', `${therapistStats.averageSessionDuration} min`],
+          ['Attendance Rate', `${therapistStats.attendanceRate}%`],
+          ['Revenue', `$${therapistStats.revenue.toLocaleString()}`],
+          ['Hours Worked', `${therapistStats.hoursWorked} hrs`],
+        ],
+        theme: 'grid',
+        headStyles: { fillColor: [59, 130, 246] },
+      })
+      
+      // Session trends table
+      doc.addPage()
+      doc.setFontSize(14)
+      doc.text('Session Trends', 14, 20)
+      
+      autoTable(doc, {
+        startY: 28,
+        head: [['Month', 'Total', 'Completed', 'Cancelled']],
+        body: sessionTrendsData.map(item => [
+          item.month,
+          item.sessions.toString(),
+          item.completed.toString(),
+          item.cancelled.toString()
+        ]),
+        theme: 'grid',
+        headStyles: { fillColor: [59, 130, 246] },
+      })
+      
+    } else {
+      // Patient report
+      doc.setFontSize(14)
+      doc.text('Your Progress Overview', 14, 52)
+      
+      autoTable(doc, {
+        startY: 58,
+        head: [['Metric', 'Value']],
+        body: [
+          ['Total Sessions', patientStats.totalSessions.toString()],
+          ['Completed Sessions', patientStats.completedSessions.toString()],
+          ['Missed Sessions', patientStats.missedSessions.toString()],
+          ['Adherence Rate', `${patientStats.adherenceRate}%`],
+          ['Mood Trend', patientStats.moodTrend],
+        ],
+        theme: 'grid',
+        headStyles: { fillColor: [59, 130, 246] },
+      })
+      
+      // Assessment scores table
+      doc.addPage()
+      doc.setFontSize(14)
+      doc.text('Assessment Score Trends', 14, 20)
+      
+      autoTable(doc, {
+        startY: 28,
+        head: [['Week', 'PHQ-9', 'GAD-7']],
+        body: assessmentScoresData.map(item => [
+          item.week,
+          item.phq9.toString(),
+          item.gad7.toString()
+        ]),
+        theme: 'grid',
+        headStyles: { fillColor: [59, 130, 246] },
+      })
+    }
+    
+    // Save the PDF
+    doc.save(`therapyflow-report-${selectedReport}-${currentDate}.pdf`)
+  }
+
+  const exportToCSV = () => {
+    let csvContent = ''
+    const currentDate = new Date().toLocaleDateString()
+    
+    if (userRole === 'therapist') {
+      // Therapist CSV
+      csvContent = 'TherapyFlow Therapist Report\n'
+      csvContent += `Generated: ${currentDate}\n`
+      csvContent += `Report Type: ${selectedReport}\n`
+      csvContent += `Date Range: ${dateRange}\n\n`
+      
+      csvContent += 'Practice Overview\n'
+      csvContent += 'Metric,Value\n'
+      csvContent += `Total Sessions,${therapistStats.totalSessions}\n`
+      csvContent += `Completed Sessions,${therapistStats.completedSessions}\n`
+      csvContent += `Cancelled Sessions,${therapistStats.cancelledSessions}\n`
+      csvContent += `Active Patients,${therapistStats.activePatients}\n`
+      csvContent += `Average Session Duration,${therapistStats.averageSessionDuration} min\n`
+      csvContent += `Attendance Rate,${therapistStats.attendanceRate}%\n`
+      csvContent += `Revenue,$${therapistStats.revenue}\n`
+      csvContent += `Hours Worked,${therapistStats.hoursWorked} hrs\n\n`
+      
+      csvContent += 'Session Trends\n'
+      csvContent += 'Month,Total,Completed,Cancelled\n'
+      sessionTrendsData.forEach(item => {
+        csvContent += `${item.month},${item.sessions},${item.completed},${item.cancelled}\n`
+      })
+    } else {
+      // Patient CSV
+      csvContent = 'TherapyFlow Patient Report\n'
+      csvContent += `Generated: ${currentDate}\n`
+      csvContent += `Report Type: ${selectedReport}\n`
+      csvContent += `Date Range: ${dateRange}\n\n`
+      
+      csvContent += 'Progress Overview\n'
+      csvContent += 'Metric,Value\n'
+      csvContent += `Total Sessions,${patientStats.totalSessions}\n`
+      csvContent += `Completed Sessions,${patientStats.completedSessions}\n`
+      csvContent += `Missed Sessions,${patientStats.missedSessions}\n`
+      csvContent += `Adherence Rate,${patientStats.adherenceRate}%\n`
+      csvContent += `Mood Trend,${patientStats.moodTrend}\n\n`
+      
+      csvContent += 'Assessment Scores\n'
+      csvContent += 'Week,PHQ-9,GAD-7\n'
+      assessmentScoresData.forEach(item => {
+        csvContent += `${item.week},${item.phq9},${item.gad7}\n`
+      })
+    }
+    
+    // Download CSV
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    const link = document.createElement('a')
+    const url = URL.createObjectURL(blob)
+    link.setAttribute('href', url)
+    link.setAttribute('download', `therapyflow-report-${selectedReport}-${currentDate}.csv`)
+    link.style.visibility = 'hidden'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
+  const exportToExcel = () => {
+    // For Excel, we'll use CSV format with .xls extension
+    // For a proper Excel file, you'd need a library like xlsx
+    let csvContent = ''
+    const currentDate = new Date().toLocaleDateString()
+    
+    if (userRole === 'therapist') {
+      csvContent = 'TherapyFlow Therapist Report\n'
+      csvContent += `Generated: ${currentDate}\n`
+      csvContent += `Report Type: ${selectedReport}\n`
+      csvContent += `Date Range: ${dateRange}\n\n`
+      
+      csvContent += 'Practice Overview\n'
+      csvContent += 'Metric\tValue\n'
+      csvContent += `Total Sessions\t${therapistStats.totalSessions}\n`
+      csvContent += `Completed Sessions\t${therapistStats.completedSessions}\n`
+      csvContent += `Cancelled Sessions\t${therapistStats.cancelledSessions}\n`
+      csvContent += `Active Patients\t${therapistStats.activePatients}\n`
+      csvContent += `Average Session Duration\t${therapistStats.averageSessionDuration} min\n`
+      csvContent += `Attendance Rate\t${therapistStats.attendanceRate}%\n`
+      csvContent += `Revenue\t$${therapistStats.revenue}\n`
+      csvContent += `Hours Worked\t${therapistStats.hoursWorked} hrs\n\n`
+      
+      csvContent += 'Session Trends\n'
+      csvContent += 'Month\tTotal\tCompleted\tCancelled\n'
+      sessionTrendsData.forEach(item => {
+        csvContent += `${item.month}\t${item.sessions}\t${item.completed}\t${item.cancelled}\n`
+      })
+    } else {
+      csvContent = 'TherapyFlow Patient Report\n'
+      csvContent += `Generated: ${currentDate}\n`
+      csvContent += `Report Type: ${selectedReport}\n`
+      csvContent += `Date Range: ${dateRange}\n\n`
+      
+      csvContent += 'Progress Overview\n'
+      csvContent += 'Metric\tValue\n'
+      csvContent += `Total Sessions\t${patientStats.totalSessions}\n`
+      csvContent += `Completed Sessions\t${patientStats.completedSessions}\n`
+      csvContent += `Missed Sessions\t${patientStats.missedSessions}\n`
+      csvContent += `Adherence Rate\t${patientStats.adherenceRate}%\n`
+      csvContent += `Mood Trend\t${patientStats.moodTrend}\n\n`
+      
+      csvContent += 'Assessment Scores\n'
+      csvContent += 'Week\tPHQ-9\tGAD-7\n'
+      assessmentScoresData.forEach(item => {
+        csvContent += `${item.week}\t${item.phq9}\t${item.gad7}\n`
+      })
+    }
+    
+    // Download as Excel-compatible file
+    const blob = new Blob([csvContent], { type: 'application/vnd.ms-excel' })
+    const link = document.createElement('a')
+    const url = URL.createObjectURL(blob)
+    link.setAttribute('href', url)
+    link.setAttribute('download', `therapyflow-report-${selectedReport}-${currentDate}.xls`)
+    link.style.visibility = 'hidden'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
   }
 
   // Mock chart data for visualization
