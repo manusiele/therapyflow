@@ -16,48 +16,6 @@ export default function TherapistLoginPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
 
-  const handleDemoLogin = async () => {
-    setIsLoading(true)
-    setError('')
-
-    try {
-      const demoEmail = `demo.therapist.${Date.now()}@therapyflow.demo`
-      const demoPassword = 'DemoPassword123!'
-
-      // Create demo account
-      const { data: signUpData, error: signUpError } = await auth.signUp(
-        demoEmail,
-        demoPassword,
-        'therapist',
-        {
-          fullName: 'Dr. Demo Therapist',
-          specialization: 'Clinical Psychology',
-          licenseNumber: 'DEMO-' + Math.random().toString(36).substr(2, 9).toUpperCase(),
-          bio: 'Demo therapist account for testing and exploration'
-        }
-      )
-
-      if (signUpError) {
-        setError('Failed to create demo account: ' + signUpError.message)
-        setIsLoading(false)
-        return
-      }
-
-      // Sign in with demo account
-      const { data: authData, error: authError } = await auth.signIn(demoEmail, demoPassword)
-      
-      if (authError) {
-        setError('Failed to sign in with demo account: ' + authError.message)
-        setIsLoading(false)
-        return
-      }
-
-      router.push('/dashboard')
-    } catch (err) {
-      setError('An unexpected error occurred creating demo account.')
-      setIsLoading(false)
-    }
-  }
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
