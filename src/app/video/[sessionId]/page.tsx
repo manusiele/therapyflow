@@ -35,6 +35,9 @@ export default function VideoCallPage() {
   const [participants, setParticipants] = useState<Participant[]>([])
   const [waitingForOther, setWaitingForOther] = useState(false)
   const [userRole, setUserRole] = useState<'therapist' | 'patient' | null>(null)
+  const [showNotes, setShowNotes] = useState(false)
+  const [notes, setNotes] = useState('')
+  const [isSavingNotes, setIsSavingNotes] = useState(false)
 
   // Initialize session and presence
   useEffect(() => {
@@ -56,6 +59,11 @@ export default function VideoCallPage() {
         // Determine user role
         const role = session.therapist_id === user.id ? 'therapist' : 'patient'
         setUserRole(role)
+
+        // Load existing notes
+        if (session.notes) {
+          setNotes(session.notes)
+        }
 
         // Update presence
         await updatePresence(sessionId, user.id, role, true)
@@ -287,6 +295,27 @@ export default function VideoCallPage() {
     router.push(userRole === 'therapist' ? '/dashboard' : '/patient')
   }
 
+  const handleSaveNotes = async () => {
+    if (!sessionId || !notes.trim()) return
+
+    setIsSavingNotes(true)
+    try {
+      const { error } = await sessions.updateNotes(sessionId, notes)
+      
+      if (error) {
+        console.error('Error saving notes:', error)
+        alert('Failed to save notes')
+      } else {
+        alert('Notes saved successfully!')
+      }
+    } catch (err) {
+      console.error('Error saving notes:', err)
+      alert('Failed to save notes')
+    } finally {
+      setIsSavingNotes(false)
+    }
+  }
+
   if (!user) {
     return (
       <div className="min-h-screen bg-slate-900 flex items-center justify-center">
@@ -308,19 +337,33 @@ export default function VideoCallPage() {
             <p className="text-slate-400 text-xs sm:text-sm">Secure & Private</p>
           </div>
         </div>
-        <button
-          onClick={handleEndCall}
-          className="text-white hover:text-red-400 transition-colors px-3 sm:px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg flex items-center space-x-2 text-sm"
-        >
-          <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-          <span className="hidden sm:inline">End Call</span>
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowNotes(!showNotes)}
+            className="text-white hover:bg-slate-800 transition-colors px-3 sm:px-4 py-2 rounded-lg flex items-center space-x-2 text-sm"
+            title="Toggle Notes"
+          >
+            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+            <span className="hidden sm:inline">Notes</span>
+          </button>
+          <button
+            onClick={handleEndCall}
+            className="text-white hover:text-red-400 transition-colors px-3 sm:px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg flex items-center space-x-2 text-sm"
+          >
+            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            <span className="hidden sm:inline">End Call</span>
+          </button>
+        </div>
       </div>
 
-      {/* Video Container */}
-      <div className="flex-1 relative">
+      {/* Main Content Area */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Video Container */}
+        <div className={`relative transition-all duration-300 ${showNotes ? 'w-2/3' : 'w-full'}`}>
         {waitingForOther && (
           <div className="absolute inset-0 flex items-center justify-center bg-slate-900 z-10">
             <div className="text-center max-w-md px-4">
@@ -373,6 +416,67 @@ export default function VideoCallPage() {
         )}
 
         <div ref={dailyContainerRef} className="w-full h-full" />
+      </div>
+
+      {/* Notes Panel */}
+      {showNotes && (
+        <div className="w-1/3 bg-slate-900 border-l border-slate-700 flex flex-col">
+          <div className="p-4 border-b border-slate-700">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-white font-semibold flex items-center gap-2">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                Session Notes
+              </h3>
+              <span className="text-xs text-slate-400">
+                {userRole === 'therapist' ? 'Therapist' : 'Patient'} View
+              </span>
+            </div>
+            <p className="text-xs text-slate-400">
+              {userRole === 'therapist' 
+                ? 'Take notes during the session. Notes are saved automatically.' 
+                : 'View and add your own notes about the session.'}
+            </p>
+          </div>
+          
+          <div className="flex-1 p-4 overflow-y-auto">
+            <textarea
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder={userRole === 'therapist' 
+                ? 'Enter session notes, observations, treatment plan updates...' 
+                : 'Add your thoughts, questions, or reflections...'}
+              className="w-full h-full bg-slate-800 text-white rounded-lg p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-slate-500"
+            />
+          </div>
+
+          <div className="p-4 border-t border-slate-700">
+            <button
+              onClick={handleSaveNotes}
+              disabled={isSavingNotes || !notes.trim()}
+              className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-slate-700 disabled:cursor-not-allowed text-white font-medium py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+            >
+              {isSavingNotes ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <span>Saving...</span>
+                </>
+              ) : (
+                <>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                  </svg>
+                  <span>Save Notes</span>
+                </>
+              )}
+            </button>
+            <p className="text-xs text-slate-500 mt-2 text-center">
+              Last saved: {new Date().toLocaleTimeString()}
+            </p>
+          </div>
+        </div>
+      )}
       </div>
 
       {/* Footer */}
