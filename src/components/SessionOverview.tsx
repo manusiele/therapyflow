@@ -47,7 +47,13 @@ export default function SessionOverview() {
       </div>
       
       <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-700">
-        <Link href="/dashboard/schedule" className="w-full btn-secondary text-center block">
+        <Link 
+          href="/dashboard/schedule" 
+          className="w-full inline-flex items-center justify-center px-4 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 font-medium rounded-lg transition-colors"
+        >
+          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
           View Full Schedule
         </Link>
       </div>
