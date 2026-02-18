@@ -44,9 +44,9 @@ export default function SignupPage() {
       const { data: authData, error: authError } = await auth.signUp(
         formData.email,
         formData.password,
+        formData.role,
         {
-          name: formData.name,
-          role: formData.role
+          name: formData.name
         }
       )
       

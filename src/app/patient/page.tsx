@@ -60,13 +60,13 @@ export default function PatientPortal() {
           return
         }
 
-        if (data && data.name) {
+        if (data) {
           setProfileData({
-            name: data.name,
-            email: data.email,
-            phone: data.phone || '',
-            dateOfBirth: data.date_of_birth || '',
-            emergencyContact: data.emergency_contact || '',
+            name: (data as any).name || 'Patient',
+            email: (data as any).email || user.email,
+            phone: (data as any).phone || '',
+            dateOfBirth: (data as any).date_of_birth || '',
+            emergencyContact: (data as any).emergency_contact || '',
             role: 'client'
           })
         }
@@ -86,8 +86,8 @@ export default function PatientPortal() {
     try {
       const { data: patientData } = await patients.getByEmail(user.email)
       
-      if (patientData && patientData.id) {
-        await patients.update(patientData.id, {
+      if (patientData && (patientData as any).id) {
+        await patients.update((patientData as any).id, {
           name: data.name,
           phone: data.phone,
           date_of_birth: data.dateOfBirth,

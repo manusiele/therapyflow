@@ -57,12 +57,12 @@ export default function VideoCallPage() {
         setSessionData(session)
 
         // Determine user role
-        const role = session.therapist_id === user.id ? 'therapist' : 'patient'
+        const role = (session as any).therapist_id === user.id ? 'therapist' : 'patient'
         setUserRole(role)
 
         // Load existing notes
-        if (session.notes) {
-          setNotes(session.notes)
+        if ((session as any).notes) {
+          setNotes((session as any).notes)
         }
 
         // Update presence
@@ -109,7 +109,7 @@ export default function VideoCallPage() {
           user_type: userType,
           is_online: isOnline,
           ...(isOnline ? { joined_at: new Date().toISOString() } : { left_at: new Date().toISOString() })
-        })
+        } as any)
 
       if (error) console.error('Error updating presence:', error)
     } catch (err) {
@@ -129,7 +129,7 @@ export default function VideoCallPage() {
         return
       }
 
-      const onlineCount = data?.filter(p => p.is_online).length || 0
+      const onlineCount = data?.filter((p: any) => p.is_online).length || 0
       
       if (onlineCount < 2) {
         setWaitingForOther(true)

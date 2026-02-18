@@ -18,7 +18,7 @@ interface ProfileModalProps {
   isOpen: boolean
   onClose: () => void
   profileData: ProfileData
-  onSave: (data: ProfileData) => void
+  onSave: (data: ProfileData) => void | Promise<void>
 }
 
 export default function ProfileModal({ isOpen, onClose, profileData, onSave }: ProfileModalProps) {

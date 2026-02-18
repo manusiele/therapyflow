@@ -5,7 +5,7 @@ import Image from 'next/image'
 import SessionOverview from '@/components/SessionOverview'
 import PatientProgress from '@/components/PatientProgress'
 import AddSessionModal, { SessionFormData } from '@/components/AddSessionModal'
-import ProfileModal from '@/components/ProfileModal'
+import ProfileModal, { ProfileData } from '@/components/ProfileModal'
 import PatientManagementModal from '@/components/PatientManagementModal'
 import CalendarIntegrationModal from '@/components/CalendarIntegrationModal'
 import MessagesModal from '@/components/MessagesModal'
@@ -25,7 +25,7 @@ export default function Dashboard() {
   const [isMessagesModalOpen, setIsMessagesModalOpen] = useState(false)
   const [isReportsModalOpen, setIsReportsModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const [profileData, setProfileData] = useState({
+  const [profileData, setProfileData] = useState<ProfileData>({
     name: 'Therapist',
     email: '',
     phone: '',
@@ -47,14 +47,14 @@ export default function Dashboard() {
           return
         }
 
-        if (data && data.name) {
+        if (data) {
           setProfileData({
-            name: data.name,
-            email: data.email,
-            phone: data.phone || '',
-            specialization: data.specialization || '',
-            licenseNumber: data.license_number || '',
-            bio: data.bio || '',
+            name: (data as any).name || 'Therapist',
+            email: (data as any).email || user.email,
+            phone: (data as any).phone || '',
+            specialization: (data as any).specialization || '',
+            licenseNumber: (data as any).license_number || '',
+            bio: (data as any).bio || '',
             role: 'therapist'
           })
         }
@@ -74,19 +74,19 @@ export default function Dashboard() {
     // Show success notification, refresh data, etc.
   }
 
-  const handleSaveProfile = async (data: typeof profileData) => {
+  const handleSaveProfile = async (data: ProfileData) => {
     if (!user?.email) return
 
     try {
       const { data: therapistData } = await therapists.getByEmail(user.email)
       
-      if (therapistData && therapistData.id) {
-        await therapists.update(therapistData.id, {
+      if (therapistData && (therapistData as any).id) {
+        await therapists.update((therapistData as any).id, {
           name: data.name,
           phone: data.phone,
-          specialization: data.specialization,
-          license_number: data.licenseNumber,
-          bio: data.bio
+          specialization: data.specialization || '',
+          license_number: data.licenseNumber || '',
+          bio: data.bio || ''
         })
       }
 
