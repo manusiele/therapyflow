@@ -39,6 +39,7 @@ export default function SchedulePage() {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
   const [showSessionNotes, setShowSessionNotes] = useState(false)
   const [sessionForNotes, setSessionForNotes] = useState<Session | null>(null)
+  const [currentTime] = useState(new Date())
   
   // Profile data based on view category
   const [therapistProfile, setTherapistProfile] = useState({
@@ -60,9 +61,19 @@ export default function SchedulePage() {
   
   const currentProfile = viewCategory === 'therapist' ? therapistProfile : clientProfile
 
+  // Get current time formatted
+  const getCurrentTimeFormatted = () => {
+    return currentTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
+  }
+
+  const getEndTimeFormatted = (durationMin: number) => {
+    const endTime = new Date(currentTime.getTime() + durationMin * 60000)
+    return endTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
+  }
+
   // Mock data - Therapist sessions (therapist's schedule)
   const [therapistSessions, setTherapistSessions] = useState<Session[]>([
-    { id: '1', patient: 'John Doe', type: 'Individual Therapy', time: '09:00 AM', duration: '50 min', status: 'confirmed' },
+    { id: '1', patient: 'John Doe', type: 'Individual Therapy', time: getCurrentTimeFormatted(), duration: '50 min', status: 'confirmed' },
     { id: '2', patient: 'Jane Smith', type: 'Couples Therapy', time: '10:30 AM', duration: '60 min', status: 'confirmed' },
     { id: '3', patient: 'Michael Brown', type: 'Initial Consultation', time: '02:00 PM', duration: '90 min', status: 'scheduled' },
     { id: '4', patient: 'Emily Davis', type: 'Individual Therapy', time: '03:30 PM', duration: '50 min', status: 'confirmed' },
