@@ -230,9 +230,9 @@ export default function ReportsAnalyticsModal({
       
       autoTable(doc, {
         startY: 28,
-        head: [['Month', 'Total', 'Completed', 'Cancelled']],
+        head: [['Period', 'Total', 'Completed', 'Cancelled']],
         body: sessionTrendsData.map(item => [
-          item.month,
+          item.period,
           item.sessions.toString(),
           item.completed.toString(),
           item.cancelled.toString()
@@ -267,9 +267,9 @@ export default function ReportsAnalyticsModal({
       
       autoTable(doc, {
         startY: 28,
-        head: [['Week', 'PHQ-9', 'GAD-7']],
+        head: [['Period', 'PHQ-9', 'GAD-7']],
         body: assessmentScoresData.map(item => [
-          item.week,
+          item.period,
           item.phq9.toString(),
           item.gad7.toString()
         ]),
@@ -305,9 +305,9 @@ export default function ReportsAnalyticsModal({
       csvContent += `Hours Worked,${therapistStats.hoursWorked} hrs\n\n`
       
       csvContent += 'Session Trends\n'
-      csvContent += 'Month,Total,Completed,Cancelled\n'
+      csvContent += 'Period,Total,Completed,Cancelled\n'
       sessionTrendsData.forEach(item => {
-        csvContent += `${item.month},${item.sessions},${item.completed},${item.cancelled}\n`
+        csvContent += `${item.period},${item.sessions},${item.completed},${item.cancelled}\n`
       })
     } else {
       // Patient CSV
@@ -325,9 +325,9 @@ export default function ReportsAnalyticsModal({
       csvContent += `Mood Trend,${patientStats.moodTrend}\n\n`
       
       csvContent += 'Assessment Scores\n'
-      csvContent += 'Week,PHQ-9,GAD-7\n'
+      csvContent += 'Period,PHQ-9,GAD-7\n'
       assessmentScoresData.forEach(item => {
-        csvContent += `${item.week},${item.phq9},${item.gad7}\n`
+        csvContent += `${item.period},${item.phq9},${item.gad7}\n`
       })
     }
     
@@ -367,9 +367,9 @@ export default function ReportsAnalyticsModal({
       csvContent += `Hours Worked\t${therapistStats.hoursWorked} hrs\n\n`
       
       csvContent += 'Session Trends\n'
-      csvContent += 'Month\tTotal\tCompleted\tCancelled\n'
+      csvContent += 'Period\tTotal\tCompleted\tCancelled\n'
       sessionTrendsData.forEach(item => {
-        csvContent += `${item.month}\t${item.sessions}\t${item.completed}\t${item.cancelled}\n`
+        csvContent += `${item.period}\t${item.sessions}\t${item.completed}\t${item.cancelled}\n`
       })
     } else {
       csvContent = 'TherapyFlow Patient Report\n'
@@ -386,9 +386,9 @@ export default function ReportsAnalyticsModal({
       csvContent += `Mood Trend\t${patientStats.moodTrend}\n\n`
       
       csvContent += 'Assessment Scores\n'
-      csvContent += 'Week\tPHQ-9\tGAD-7\n'
+      csvContent += 'Period\tPHQ-9\tGAD-7\n'
       assessmentScoresData.forEach(item => {
-        csvContent += `${item.week}\t${item.phq9}\t${item.gad7}\n`
+        csvContent += `${item.period}\t${item.phq9}\t${item.gad7}\n`
       })
     }
     
@@ -404,43 +404,160 @@ export default function ReportsAnalyticsModal({
     document.body.removeChild(link)
   }
 
-  // Mock chart data for visualization
-  const sessionTrendsData = [
-    { month: 'Jan', sessions: 45, completed: 42, cancelled: 3 },
-    { month: 'Feb', sessions: 52, completed: 48, cancelled: 4 },
-    { month: 'Mar', sessions: 48, completed: 45, cancelled: 3 },
-    { month: 'Apr', sessions: 58, completed: 54, cancelled: 4 },
-    { month: 'May', sessions: 62, completed: 58, cancelled: 4 },
-    { month: 'Jun', sessions: 55, completed: 51, cancelled: 4 },
-  ]
+  // Mock chart data for visualization - changes based on date range
+  const getSessionTrendsData = () => {
+    switch (dateRange) {
+      case 'week':
+        return [
+          { period: 'Mon', sessions: 8, completed: 7, cancelled: 1 },
+          { period: 'Tue', sessions: 9, completed: 8, cancelled: 1 },
+          { period: 'Wed', sessions: 7, completed: 7, cancelled: 0 },
+          { period: 'Thu', sessions: 10, completed: 9, cancelled: 1 },
+          { period: 'Fri', sessions: 8, completed: 8, cancelled: 0 },
+          { period: 'Sat', sessions: 5, completed: 5, cancelled: 0 },
+          { period: 'Sun', sessions: 3, completed: 3, cancelled: 0 },
+        ]
+      case 'month':
+        return [
+          { period: 'Week 1', sessions: 45, completed: 42, cancelled: 3 },
+          { period: 'Week 2', sessions: 52, completed: 48, cancelled: 4 },
+          { period: 'Week 3', sessions: 48, completed: 45, cancelled: 3 },
+          { period: 'Week 4', sessions: 58, completed: 54, cancelled: 4 },
+        ]
+      case 'quarter':
+        return [
+          { period: 'Jan', sessions: 145, completed: 135, cancelled: 10 },
+          { period: 'Feb', sessions: 152, completed: 142, cancelled: 10 },
+          { period: 'Mar', sessions: 148, completed: 140, cancelled: 8 },
+        ]
+      case 'year':
+        return [
+          { period: 'Q1', sessions: 445, completed: 417, cancelled: 28 },
+          { period: 'Q2', sessions: 520, completed: 485, cancelled: 35 },
+          { period: 'Q3', sessions: 480, completed: 450, cancelled: 30 },
+          { period: 'Q4', sessions: 580, completed: 545, cancelled: 35 },
+        ]
+      default:
+        return []
+    }
+  }
 
-  const revenueData = [
-    { month: 'Jan', revenue: 4500, expenses: 1200 },
-    { month: 'Feb', revenue: 5200, expenses: 1300 },
-    { month: 'Mar', revenue: 4800, expenses: 1250 },
-    { month: 'Apr', revenue: 5800, expenses: 1400 },
-    { month: 'May', revenue: 6200, expenses: 1450 },
-    { month: 'Jun', revenue: 5500, expenses: 1350 },
-  ]
+  const getRevenueData = () => {
+    switch (dateRange) {
+      case 'week':
+        return [
+          { period: 'Mon', revenue: 800, expenses: 200 },
+          { period: 'Tue', revenue: 900, expenses: 220 },
+          { period: 'Wed', revenue: 700, expenses: 180 },
+          { period: 'Thu', revenue: 1000, expenses: 250 },
+          { period: 'Fri', revenue: 800, expenses: 200 },
+          { period: 'Sat', revenue: 500, expenses: 150 },
+          { period: 'Sun', revenue: 300, expenses: 100 },
+        ]
+      case 'month':
+        return [
+          { period: 'Week 1', revenue: 4500, expenses: 1200 },
+          { period: 'Week 2', revenue: 5200, expenses: 1300 },
+          { period: 'Week 3', revenue: 4800, expenses: 1250 },
+          { period: 'Week 4', revenue: 5800, expenses: 1450 },
+        ]
+      case 'quarter':
+        return [
+          { period: 'Jan', revenue: 14500, expenses: 3600 },
+          { period: 'Feb', revenue: 15200, expenses: 3800 },
+          { period: 'Mar', revenue: 14800, expenses: 3700 },
+        ]
+      case 'year':
+        return [
+          { period: 'Q1', revenue: 44500, expenses: 11100 },
+          { period: 'Q2', revenue: 52000, expenses: 13000 },
+          { period: 'Q3', revenue: 48000, expenses: 12000 },
+          { period: 'Q4', revenue: 58000, expenses: 14500 },
+        ]
+      default:
+        return []
+    }
+  }
 
-  const assessmentScoresData = [
-    { week: 'Week 1', phq9: 15, gad7: 16 },
-    { week: 'Week 2', phq9: 13, gad7: 14 },
-    { week: 'Week 3', phq9: 11, gad7: 12 },
-    { week: 'Week 4', phq9: 9, gad7: 10 },
-    { week: 'Week 5', phq9: 8, gad7: 9 },
-    { week: 'Week 6', phq9: 7, gad7: 8 },
-  ]
+  const getAssessmentScoresData = () => {
+    switch (dateRange) {
+      case 'week':
+        return [
+          { period: 'Mon', phq9: 8, gad7: 9 },
+          { period: 'Tue', phq9: 8, gad7: 9 },
+          { period: 'Wed', phq9: 7, gad7: 8 },
+          { period: 'Thu', phq9: 7, gad7: 8 },
+          { period: 'Fri', phq9: 7, gad7: 8 },
+          { period: 'Sat', phq9: 6, gad7: 7 },
+          { period: 'Sun', phq9: 6, gad7: 7 },
+        ]
+      case 'month':
+        return [
+          { period: 'Week 1', phq9: 15, gad7: 16 },
+          { period: 'Week 2', phq9: 13, gad7: 14 },
+          { period: 'Week 3', phq9: 11, gad7: 12 },
+          { period: 'Week 4', phq9: 9, gad7: 10 },
+        ]
+      case 'quarter':
+        return [
+          { period: 'Jan', phq9: 15, gad7: 16 },
+          { period: 'Feb', phq9: 11, gad7: 12 },
+          { period: 'Mar', phq9: 7, gad7: 8 },
+        ]
+      case 'year':
+        return [
+          { period: 'Q1', phq9: 15, gad7: 16 },
+          { period: 'Q2', phq9: 12, gad7: 13 },
+          { period: 'Q3', phq9: 9, gad7: 10 },
+          { period: 'Q4', phq9: 6, gad7: 7 },
+        ]
+      default:
+        return []
+    }
+  }
 
-  const moodTrendsData = [
-    { day: 'Mon', mood: 6 },
-    { day: 'Tue', mood: 7 },
-    { day: 'Wed', mood: 5 },
-    { day: 'Thu', mood: 8 },
-    { day: 'Fri', mood: 7 },
-    { day: 'Sat', mood: 8 },
-    { day: 'Sun', mood: 9 },
-  ]
+  const getMoodTrendsData = () => {
+    switch (dateRange) {
+      case 'week':
+        return [
+          { period: 'Mon', mood: 6 },
+          { period: 'Tue', mood: 7 },
+          { period: 'Wed', mood: 5 },
+          { period: 'Thu', mood: 8 },
+          { period: 'Fri', mood: 7 },
+          { period: 'Sat', mood: 8 },
+          { period: 'Sun', mood: 9 },
+        ]
+      case 'month':
+        return [
+          { period: 'Week 1', mood: 6 },
+          { period: 'Week 2', mood: 6.5 },
+          { period: 'Week 3', mood: 7 },
+          { period: 'Week 4', mood: 7.5 },
+        ]
+      case 'quarter':
+        return [
+          { period: 'Jan', mood: 5.5 },
+          { period: 'Feb', mood: 6.5 },
+          { period: 'Mar', mood: 7.5 },
+        ]
+      case 'year':
+        return [
+          { period: 'Q1', mood: 5.5 },
+          { period: 'Q2', mood: 6.5 },
+          { period: 'Q3', mood: 7.5 },
+          { period: 'Q4', mood: 8 },
+        ]
+      default:
+        return []
+    }
+  }
+
+  // Get data based on current date range
+  const sessionTrendsData = getSessionTrendsData()
+  const revenueData = getRevenueData()
+  const assessmentScoresData = getAssessmentScoresData()
+  const moodTrendsData = getMoodTrendsData()
 
   if (!isOpen) return null
 
@@ -662,7 +779,7 @@ export default function ReportsAnalyticsModal({
                     <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={sessionTrendsData}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.3} />
-                        <XAxis dataKey="month" stroke="#94a3b8" />
+                        <XAxis dataKey="period" stroke="#94a3b8" />
                         <YAxis stroke="#94a3b8" />
                         <Tooltip 
                           contentStyle={{ 
@@ -706,7 +823,7 @@ export default function ReportsAnalyticsModal({
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={revenueData}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.3} />
-                        <XAxis dataKey="month" stroke="#94a3b8" />
+                        <XAxis dataKey="period" stroke="#94a3b8" />
                         <YAxis stroke="#94a3b8" />
                         <Tooltip 
                           contentStyle={{ 
@@ -753,7 +870,7 @@ export default function ReportsAnalyticsModal({
                     <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={assessmentScoresData}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.3} />
-                        <XAxis dataKey="week" stroke="#94a3b8" />
+                        <XAxis dataKey="period" stroke="#94a3b8" />
                         <YAxis stroke="#94a3b8" domain={[0, 20]} />
                         <Tooltip 
                           contentStyle={{ 
@@ -786,12 +903,12 @@ export default function ReportsAnalyticsModal({
 
                 {/* Mood Trends Chart */}
                 <div className="bg-slate-700/30 backdrop-blur-md rounded-xl p-6 border border-slate-600/30">
-                  <h4 className="font-semibold text-slate-100 mb-4">Weekly Mood Trends</h4>
+                  <h4 className="font-semibold text-slate-100 mb-4">Mood Trends</h4>
                   <div className="h-64">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={moodTrendsData}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.3} />
-                        <XAxis dataKey="day" stroke="#94a3b8" />
+                        <XAxis dataKey="period" stroke="#94a3b8" />
                         <YAxis stroke="#94a3b8" domain={[0, 10]} />
                         <Tooltip 
                           contentStyle={{ 
