@@ -1543,7 +1543,7 @@ export default function SchedulePage() {
             setIsVideoCallOpen(false)
             setVideoCallSession(null)
           }}
-          roomName={generateRoomNameFromIds('therapist-id', videoCallSession.id, videoCallSession.time)}
+          roomName={generateRoomNameFromIds('therapist-id', videoCallSession.id, selectedDate.toISOString())}
           displayName={viewCategory === 'therapist' ? therapistProfile.name : clientProfile.name}
           userRole={viewCategory === 'therapist' ? 'therapist' : 'patient'}
         />
