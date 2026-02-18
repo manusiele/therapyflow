@@ -1533,7 +1533,10 @@ export default function ReportsAnalyticsModal({
             )}
 
             {/* Other report types would be rendered here */}
-            {selectedReport !== 'overview' && selectedReport !== 'revenue' && (
+            {selectedReport !== 'overview' && 
+             selectedReport !== 'sessions' && 
+             selectedReport !== 'patients' && 
+             selectedReport !== 'revenue' && (
               <div className="h-full flex items-center justify-center">
                 <div className="text-center text-slate-400">
                   <svg className="w-20 h-20 mx-auto mb-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
