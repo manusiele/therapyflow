@@ -24,6 +24,7 @@ export default function PatientPortal() {
   const [showToast, setShowToast] = useState(false)
   const [toastMessage, setToastMessage] = useState('')
   const [isLoading, setIsLoading] = useState(true)
+  const [currentTime, setCurrentTime] = useState(new Date())
   const [assessmentHistory, setAssessmentHistory] = useState<Array<{
     date: string
     assessmentType: string
@@ -37,6 +38,15 @@ export default function PatientPortal() {
     emergencyContact: '',
     role: 'client' as const
   })
+
+  // Update current time every minute
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date())
+    }, 60000) // Update every minute
+
+    return () => clearInterval(timer)
+  }, [])
 
   useEffect(() => {
     const fetchPatientData = async () => {
@@ -261,12 +271,14 @@ export default function PatientPortal() {
                     <p className="font-medium text-slate-900 dark:text-slate-100">Dr. Sarah Johnson</p>
                     <p className="text-sm text-slate-600 dark:text-slate-400">Individual Therapy</p>
                   </div>
-                  <span className="text-xs bg-blue-600 dark:bg-blue-500 text-white px-2 py-1 rounded-full">Tomorrow</span>
+                  <span className="text-xs bg-blue-600 dark:bg-blue-500 text-white px-2 py-1 rounded-full">Now</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
-                  <span className="text-blue-700 dark:text-blue-300 font-medium">2:00 PM - 2:50 PM</span>
+                  <span className="text-blue-700 dark:text-blue-300 font-medium">
+                    {currentTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })} - {new Date(currentTime.getTime() + 50 * 60000).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}
+                  </span>
                   <Link 
-                    href="/video/session-tomorrow-123"
+                    href="/video/1"
                     className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium"
                   >
                     Join Video
