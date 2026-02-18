@@ -50,37 +50,37 @@ export default function ReportsAnalyticsModal({
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-6xl max-h-[90vh] overflow-hidden flex flex-col">
-        {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
+      <div className="bg-slate-800/95 backdrop-blur-xl rounded-2xl shadow-2xl w-full max-w-6xl max-h-[90vh] overflow-hidden flex flex-col border border-slate-700/50">
+        {/* Header - Subtle Dark Theme */}
+        <div className="px-6 py-5 border-b border-slate-700/50 flex justify-between items-center bg-slate-800/80">
           <div>
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Reports & Analytics</h2>
-            <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+            <h2 className="text-2xl font-bold text-slate-100">Reports & Analytics</h2>
+            <p className="text-sm text-slate-400 mt-1">
               {userRole === 'therapist' ? 'Practice insights and performance metrics' : 'Your progress and wellness journey'}
             </p>
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+            className="p-2 hover:bg-slate-700/50 rounded-lg transition-colors"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-hidden flex">
-          {/* Sidebar */}
-          <div className="w-64 border-r border-slate-200 dark:border-slate-700 p-4 overflow-y-auto">
-            <div className="space-y-2">
+        <div className="flex-1 overflow-hidden flex bg-slate-900/50">
+          {/* Sidebar - Subtle Dark Theme */}
+          <div className="w-64 border-r border-slate-700/50 p-4 overflow-y-auto bg-slate-800/40">
+            <div className="space-y-1">
               <button
                 onClick={() => setSelectedReport('overview')}
-                className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
+                className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
                   selectedReport === 'overview'
-                    ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
-                    : 'hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300'
+                    ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30'
+                    : 'hover:bg-slate-700/30 text-slate-300 border border-transparent'
                 }`}
               >
                 <div className="flex items-center space-x-3">
@@ -95,10 +95,10 @@ export default function ReportsAnalyticsModal({
                 <>
                   <button
                     onClick={() => setSelectedReport('sessions')}
-                    className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
+                    className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
                       selectedReport === 'sessions'
-                        ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
-                        : 'hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300'
+                        ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30'
+                        : 'hover:bg-slate-700/30 text-slate-300 border border-transparent'
                     }`}
                   >
                     <div className="flex items-center space-x-3">
@@ -111,10 +111,10 @@ export default function ReportsAnalyticsModal({
 
                   <button
                     onClick={() => setSelectedReport('patients')}
-                    className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
+                    className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
                       selectedReport === 'patients'
-                        ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
-                        : 'hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300'
+                        ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30'
+                        : 'hover:bg-slate-700/30 text-slate-300 border border-transparent'
                     }`}
                   >
                     <div className="flex items-center space-x-3">
@@ -127,10 +127,10 @@ export default function ReportsAnalyticsModal({
 
                   <button
                     onClick={() => setSelectedReport('revenue')}
-                    className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
+                    className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
                       selectedReport === 'revenue'
-                        ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
-                        : 'hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300'
+                        ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30'
+                        : 'hover:bg-slate-700/30 text-slate-300 border border-transparent'
                     }`}
                   >
                     <div className="flex items-center space-x-3">
@@ -145,10 +145,10 @@ export default function ReportsAnalyticsModal({
                 <>
                   <button
                     onClick={() => setSelectedReport('progress')}
-                    className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
+                    className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
                       selectedReport === 'progress'
-                        ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
-                        : 'hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300'
+                        ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30'
+                        : 'hover:bg-slate-700/30 text-slate-300 border border-transparent'
                     }`}
                   >
                     <div className="flex items-center space-x-3">
@@ -161,10 +161,10 @@ export default function ReportsAnalyticsModal({
 
                   <button
                     onClick={() => setSelectedReport('assessments')}
-                    className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
+                    className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
                       selectedReport === 'assessments'
-                        ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
-                        : 'hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300'
+                        ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30'
+                        : 'hover:bg-slate-700/30 text-slate-300 border border-transparent'
                     }`}
                   >
                     <div className="flex items-center space-x-3">
@@ -177,10 +177,10 @@ export default function ReportsAnalyticsModal({
 
                   <button
                     onClick={() => setSelectedReport('mood')}
-                    className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
+                    className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
                       selectedReport === 'mood'
-                        ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
-                        : 'hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300'
+                        ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30'
+                        : 'hover:bg-slate-700/30 text-slate-300 border border-transparent'
                     }`}
                   >
                     <div className="flex items-center space-x-3">
@@ -195,14 +195,14 @@ export default function ReportsAnalyticsModal({
             </div>
 
             {/* Date Range Selector */}
-            <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-700">
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+            <div className="mt-6 pt-6 border-t border-slate-700/50">
+              <label className="block text-sm font-medium text-slate-400 mb-2">
                 Date Range
               </label>
               <select
                 value={dateRange}
                 onChange={(e) => setDateRange(e.target.value as any)}
-                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 text-sm"
+                className="w-full px-3 py-2 border border-slate-600/50 rounded-lg bg-slate-700/50 text-slate-200 text-sm focus:ring-2 focus:ring-blue-500/50 focus:border-transparent"
               >
                 <option value="week">Last 7 Days</option>
                 <option value="month">Last 30 Days</option>
@@ -215,7 +215,7 @@ export default function ReportsAnalyticsModal({
             <div className="mt-4">
               <button
                 onClick={handleExport}
-                className="w-full btn-primary py-2 text-sm flex items-center justify-center space-x-2"
+                className="w-full bg-blue-600/80 hover:bg-blue-600 text-white py-2.5 rounded-lg text-sm font-medium flex items-center justify-center space-x-2 transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -225,7 +225,7 @@ export default function ReportsAnalyticsModal({
               <select
                 value={exportFormat}
                 onChange={(e) => setExportFormat(e.target.value as any)}
-                className="w-full mt-2 px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 text-sm"
+                className="w-full mt-2 px-3 py-2 border border-slate-600/50 rounded-lg bg-slate-700/50 text-slate-200 text-sm focus:ring-2 focus:ring-blue-500/50 focus:border-transparent"
               >
                 <option value="pdf">PDF</option>
                 <option value="csv">CSV</option>
@@ -234,42 +234,42 @@ export default function ReportsAnalyticsModal({
             </div>
           </div>
 
-          {/* Main Content */}
+          {/* Main Content - Subtle Dark Theme */}
           <div className="flex-1 p-6 overflow-y-auto">
             {selectedReport === 'overview' && userRole === 'therapist' && (
               <div className="space-y-6">
-                <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">Practice Overview</h3>
+                <h3 className="text-xl font-semibold text-slate-100">Practice Overview</h3>
                 
-                {/* Stats Grid */}
+                {/* Stats Grid - Subtle Muted Colors */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="card text-center">
-                    <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">{therapistStats.totalSessions}</div>
-                    <div className="text-sm text-slate-600 dark:text-slate-400 mt-1">Total Sessions</div>
+                  <div className="bg-slate-700/30 backdrop-blur-md rounded-xl p-5 border border-slate-600/30 text-center">
+                    <div className="text-2xl font-bold text-slate-200">{therapistStats.totalSessions}</div>
+                    <div className="text-sm text-slate-400 mt-1">Total<br/>Sessions</div>
                   </div>
-                  <div className="card text-center">
-                    <div className="text-3xl font-bold text-green-600 dark:text-green-400">{therapistStats.activePatients}</div>
-                    <div className="text-sm text-slate-600 dark:text-slate-400 mt-1">Active Patients</div>
+                  <div className="bg-slate-700/30 backdrop-blur-md rounded-xl p-5 border border-slate-600/30 text-center">
+                    <div className="text-2xl font-bold text-emerald-500">{therapistStats.activePatients}</div>
+                    <div className="text-sm text-slate-400 mt-1">Active<br/>Patients</div>
                   </div>
-                  <div className="card text-center">
-                    <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">{therapistStats.attendanceRate}%</div>
-                    <div className="text-sm text-slate-600 dark:text-slate-400 mt-1">Attendance Rate</div>
+                  <div className="bg-slate-700/30 backdrop-blur-md rounded-xl p-5 border border-slate-600/30 text-center">
+                    <div className="text-2xl font-bold text-purple-400">{therapistStats.attendanceRate}%</div>
+                    <div className="text-sm text-slate-400 mt-1">Attendance<br/>Rate</div>
                   </div>
-                  <div className="card text-center">
-                    <div className="text-3xl font-bold text-yellow-600 dark:text-yellow-400">${therapistStats.revenue.toLocaleString()}</div>
-                    <div className="text-sm text-slate-600 dark:text-slate-400 mt-1">Revenue</div>
+                  <div className="bg-slate-700/30 backdrop-blur-md rounded-xl p-5 border border-slate-600/30 text-center">
+                    <div className="text-2xl font-bold text-amber-500">${therapistStats.revenue.toLocaleString()}</div>
+                    <div className="text-sm text-slate-400 mt-1">Revenue</div>
                   </div>
                 </div>
 
                 {/* Charts Placeholder */}
-                <div className="card">
-                  <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-4">Session Trends</h4>
-                  <div className="h-64 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center">
-                    <div className="text-center text-slate-500">
-                      <svg className="w-16 h-16 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="bg-slate-700/30 backdrop-blur-md rounded-xl p-6 border border-slate-600/30">
+                  <h4 className="font-semibold text-slate-100 mb-4">Session Trends</h4>
+                  <div className="h-64 bg-slate-800/50 rounded-lg flex items-center justify-center border border-slate-700/50">
+                    <div className="text-center text-slate-400">
+                      <svg className="w-16 h-16 mx-auto mb-2 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                       </svg>
-                      <p>Chart visualization would appear here</p>
-                      <p className="text-sm mt-1">Install chart library (Chart.js, Recharts, etc.)</p>
+                      <p className="text-slate-400">Chart visualization would appear here</p>
+                      <p className="text-sm mt-1 text-slate-500">Install chart library (Chart.js, Recharts, etc.)</p>
                     </div>
                   </div>
                 </div>
@@ -278,31 +278,31 @@ export default function ReportsAnalyticsModal({
 
             {selectedReport === 'overview' && userRole === 'patient' && (
               <div className="space-y-6">
-                <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">Your Progress Overview</h3>
+                <h3 className="text-xl font-semibold text-slate-100">Your Progress Overview</h3>
                 
                 {/* Stats Grid */}
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  <div className="card text-center">
-                    <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">{patientStats.completedSessions}</div>
-                    <div className="text-sm text-slate-600 dark:text-slate-400 mt-1">Sessions Completed</div>
+                  <div className="bg-slate-700/30 backdrop-blur-md rounded-xl p-5 border border-slate-600/30 text-center">
+                    <div className="text-2xl font-bold text-slate-200">{patientStats.completedSessions}</div>
+                    <div className="text-sm text-slate-400 mt-1">Sessions<br/>Completed</div>
                   </div>
-                  <div className="card text-center">
-                    <div className="text-3xl font-bold text-green-600 dark:text-green-400">{patientStats.adherenceRate}%</div>
-                    <div className="text-sm text-slate-600 dark:text-slate-400 mt-1">Adherence Rate</div>
+                  <div className="bg-slate-700/30 backdrop-blur-md rounded-xl p-5 border border-slate-600/30 text-center">
+                    <div className="text-2xl font-bold text-emerald-500">{patientStats.adherenceRate}%</div>
+                    <div className="text-sm text-slate-400 mt-1">Adherence<br/>Rate</div>
                   </div>
-                  <div className="card text-center">
-                    <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 capitalize">{patientStats.moodTrend}</div>
-                    <div className="text-sm text-slate-600 dark:text-slate-400 mt-1">Mood Trend</div>
+                  <div className="bg-slate-700/30 backdrop-blur-md rounded-xl p-5 border border-slate-600/30 text-center">
+                    <div className="text-2xl font-bold text-slate-200 capitalize">{patientStats.moodTrend}</div>
+                    <div className="text-sm text-slate-400 mt-1">Mood<br/>Trend</div>
                   </div>
                 </div>
 
                 {/* Progress Chart */}
-                <div className="card">
-                  <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-4">Assessment Score Trends</h4>
-                  <div className="h-64 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center">
-                    <div className="text-center text-slate-500">
+                <div className="bg-slate-700/30 backdrop-blur-md rounded-xl p-6 border border-slate-600/30">
+                  <h4 className="font-semibold text-slate-100 mb-4">Assessment Score Trends</h4>
+                  <div className="h-64 bg-slate-800/50 rounded-lg flex items-center justify-center border border-slate-700/50">
+                    <div className="text-center text-slate-400">
                       <p>PHQ-9 and GAD-7 score trends over time</p>
-                      <p className="text-sm mt-1">Lower scores indicate improvement</p>
+                      <p className="text-sm mt-1 text-slate-500">Lower scores indicate improvement</p>
                     </div>
                   </div>
                 </div>
@@ -312,12 +312,12 @@ export default function ReportsAnalyticsModal({
             {/* Other report types would be rendered here */}
             {selectedReport !== 'overview' && (
               <div className="h-full flex items-center justify-center">
-                <div className="text-center text-slate-500">
-                  <svg className="w-20 h-20 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="text-center text-slate-400">
+                  <svg className="w-20 h-20 mx-auto mb-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
-                  <p className="text-lg font-medium">Report: {selectedReport}</p>
-                  <p className="text-sm mt-2">Detailed {selectedReport} analytics would appear here</p>
+                  <p className="text-lg font-medium text-slate-300">Report: {selectedReport}</p>
+                  <p className="text-sm mt-2 text-slate-500">Detailed {selectedReport} analytics would appear here</p>
                 </div>
               </div>
             )}
