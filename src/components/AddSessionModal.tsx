@@ -1,6 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { patients } from '@/lib/supabase'
+import { useAuth } from '@/contexts/AuthContext'
 
 interface AddSessionModalProps {
   isOpen: boolean
@@ -27,7 +29,13 @@ interface Session {
   notes?: string
 }
 
+interface Patient {
+  id: string
+  name: string
+}
+
 export default function AddSessionModal({ isOpen, onClose, onSubmit, editSession }: AddSessionModalProps) {
+  const { user } = useAuth()
   const [formData, setFormData] = useState<SessionFormData>({
     patient_id: '',
     session_type: 'individual',
@@ -37,15 +45,40 @@ export default function AddSessionModal({ isOpen, onClose, onSubmit, editSession
   })
   const [errors, setErrors] = useState<Partial<Record<keyof SessionFormData, string>>>({})
   const [isDirty, setIsDirty] = useState(false)
+  const [patientsList, setPatientsList] = useState<Patient[]>([])
+  const [isLoadingPatients, setIsLoadingPatients] = useState(true)
 
-  // Mock patient data - would come from Redux/Supabase
-  const patients = [
-    { id: '1', name: 'John Doe' },
-    { id: '2', name: 'Jane Smith' },
-    { id: '3', name: 'Michael Brown' },
-    { id: '4', name: 'Emily Davis' },
-    { id: '5', name: 'Robert Wilson' },
-  ]
+  // Fetch patients from database
+  useEffect(() => {
+    const fetchPatients = async () => {
+      if (!user) return
+      
+      try {
+        setIsLoadingPatients(true)
+        const { data, error } = await patients.getAll()
+        
+        if (error) {
+          console.error('Error fetching patients:', error)
+          return
+        }
+
+        if (data) {
+          setPatientsList(data.map((p: any) => ({
+            id: p.id,
+            name: p.name
+          })))
+        }
+      } catch (err) {
+        console.error('Error loading patients:', err)
+      } finally {
+        setIsLoadingPatients(false)
+      }
+    }
+
+    if (isOpen) {
+      fetchPatients()
+    }
+  }, [isOpen, user])
 
   const sessionTypes = [
     'Individual Therapy',
@@ -60,9 +93,9 @@ export default function AddSessionModal({ isOpen, onClose, onSubmit, editSession
 
   // Populate form when editing
   useEffect(() => {
-    if (editSession) {
+    if (editSession && patientsList.length > 0) {
       // Find patient ID by name
-      const patient = patients.find(p => p.name === editSession.patient)
+      const patient = patientsList.find(p => p.name === editSession.patient)
       
       // Convert time to datetime-local format
       const today = new Date().toISOString().split('T')[0]
@@ -79,7 +112,7 @@ export default function AddSessionModal({ isOpen, onClose, onSubmit, editSession
       const duration_minutes = parseInt(editSession.duration)
       
       setFormData({
-        patient_id: patient?.id || '1',
+        patient_id: patient?.id || '',
         session_type: editSession.type.toLowerCase().replace(/ /g, '_'),
         scheduled_at,
         duration_minutes,
@@ -97,7 +130,7 @@ export default function AddSessionModal({ isOpen, onClose, onSubmit, editSession
     }
     setErrors({})
     setIsDirty(false)
-  }, [editSession, isOpen])
+  }, [editSession, isOpen, patientsList])
 
   const validateForm = (): boolean => {
     const newErrors: Partial<Record<keyof SessionFormData, string>> = {}
@@ -223,9 +256,12 @@ export default function AddSessionModal({ isOpen, onClose, onSubmit, editSession
                   } text-slate-900 dark:text-slate-100`}
                   aria-invalid={!!errors.patient_id}
                   aria-describedby={errors.patient_id ? 'patient-error' : undefined}
+                  disabled={isLoadingPatients}
                 >
-                  <option value="">Select a patient</option>
-                  {patients.map(patient => (
+                  <option value="">
+                    {isLoadingPatients ? 'Loading patients...' : 'Select a patient'}
+                  </option>
+                  {patientsList.map(patient => (
                     <option key={patient.id} value={patient.id}>
                       {patient.name}
                     </option>
