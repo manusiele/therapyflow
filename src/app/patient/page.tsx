@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import ThemeToggle from '@/components/ThemeToggle'
@@ -28,6 +29,7 @@ interface Session {
 }
 
 export default function PatientPortal() {
+  const router = useRouter()
   const { theme } = useTheme()
   const { user } = useAuth()
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
@@ -61,6 +63,13 @@ export default function PatientPortal() {
 
     return () => clearInterval(timer)
   }, [])
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!user) {
+      router.push('/auth/patient/login')
+    }
+  }, [user, router])
 
   useEffect(() => {
     const fetchPatientData = async () => {

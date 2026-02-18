@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import AddSessionModal, { SessionFormData } from '@/components/AddSessionModal'
@@ -8,6 +9,7 @@ import ProfileModal, { ProfileData } from '@/components/ProfileModal'
 import SessionNotes from '@/components/SessionNotes'
 import ThemeToggle from '@/components/ThemeToggle'
 import { useTheme } from '@/contexts/ThemeContext'
+import { useAuth } from '@/contexts/AuthContext'
 
 interface Session {
   id: string
@@ -20,7 +22,9 @@ interface Session {
 }
 
 export default function SchedulePage() {
+  const router = useRouter()
   const { theme } = useTheme()
+  const { user } = useAuth()
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [view, setView] = useState<'day' | 'week'>('day')
   const [viewCategory, setViewCategory] = useState<'therapist' | 'client'>('therapist')
@@ -298,6 +302,13 @@ export default function SchedulePage() {
       setSessionForNotes(null)
     }
   }
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!user) {
+      router.push('/auth/therapist/login')
+    }
+  }, [user, router])
 
   // Keyboard shortcuts for better UX
   useEffect(() => {

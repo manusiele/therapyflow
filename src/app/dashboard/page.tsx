@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import SessionOverview from '@/components/SessionOverview'
 import PatientProgress from '@/components/PatientProgress'
@@ -16,6 +17,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { therapists } from '@/lib/supabase'
 
 export default function Dashboard() {
+  const router = useRouter()
   const { theme } = useTheme()
   const { user } = useAuth()
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -34,6 +36,13 @@ export default function Dashboard() {
     bio: '',
     role: 'therapist' as const
   })
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!user) {
+      router.push('/auth/therapist/login')
+    }
+  }, [user, router])
 
   useEffect(() => {
     const fetchTherapistData = async () => {
