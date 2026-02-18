@@ -1054,6 +1054,200 @@ export default function ReportsAnalyticsModal({
               </div>
             )}
 
+            {/* Sessions Report */}
+            {selectedReport === 'sessions' && userRole === 'therapist' && (
+              <div className="space-y-6">
+                <h3 className="text-xl font-semibold text-slate-100">Session Analytics</h3>
+                
+                {/* Session Stats Grid */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="bg-slate-700/30 backdrop-blur-md rounded-xl p-5 border border-slate-600/30 text-center">
+                    <div className="text-2xl font-bold text-slate-200">{therapistStats.totalSessions}</div>
+                    <div className="text-sm text-slate-400 mt-1">Total<br/>Sessions</div>
+                  </div>
+                  <div className="bg-slate-700/30 backdrop-blur-md rounded-xl p-5 border border-slate-600/30 text-center">
+                    <div className="text-2xl font-bold text-emerald-500">{therapistStats.completedSessions}</div>
+                    <div className="text-sm text-slate-400 mt-1">Completed<br/>Sessions</div>
+                  </div>
+                  <div className="bg-slate-700/30 backdrop-blur-md rounded-xl p-5 border border-slate-600/30 text-center">
+                    <div className="text-2xl font-bold text-amber-500">{therapistStats.cancelledSessions}</div>
+                    <div className="text-sm text-slate-400 mt-1">Cancelled<br/>Sessions</div>
+                  </div>
+                  <div className="bg-slate-700/30 backdrop-blur-md rounded-xl p-5 border border-slate-600/30 text-center">
+                    <div className="text-2xl font-bold text-blue-400">{therapistStats.averageSessionDuration} min</div>
+                    <div className="text-sm text-slate-400 mt-1">Avg<br/>Duration</div>
+                  </div>
+                </div>
+
+                {/* Session Trends Chart */}
+                <div className="bg-slate-700/30 backdrop-blur-md rounded-xl p-6 border border-slate-600/30">
+                  <h4 className="font-semibold text-slate-100 mb-4">Session Trends</h4>
+                  <div className="h-80">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={sessionTrendsData}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.3} />
+                        <XAxis dataKey="period" stroke="#94a3b8" />
+                        <YAxis stroke="#94a3b8" />
+                        <Tooltip 
+                          contentStyle={{ 
+                            backgroundColor: '#1e293b', 
+                            border: '1px solid #475569',
+                            borderRadius: '8px',
+                            color: '#e2e8f0'
+                          }}
+                        />
+                        <Legend />
+                        <Line 
+                          type="monotone" 
+                          dataKey="sessions" 
+                          stroke="#3b82f6" 
+                          strokeWidth={2}
+                          name="Total Sessions"
+                        />
+                        <Line 
+                          type="monotone" 
+                          dataKey="completed" 
+                          stroke="#10b981" 
+                          strokeWidth={2}
+                          name="Completed"
+                        />
+                        <Line 
+                          type="monotone" 
+                          dataKey="cancelled" 
+                          stroke="#ef4444" 
+                          strokeWidth={2}
+                          name="Cancelled"
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                {/* Session Type Distribution */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="bg-slate-700/30 backdrop-blur-md rounded-xl p-6 border border-slate-600/30">
+                    <h4 className="font-semibold text-slate-100 mb-4">Session Types</h4>
+                    <div className="h-64">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={[
+                          { type: 'Individual', count: Math.floor(therapistStats.totalSessions * 0.60) },
+                          { type: 'Couples', count: Math.floor(therapistStats.totalSessions * 0.20) },
+                          { type: 'Family', count: Math.floor(therapistStats.totalSessions * 0.10) },
+                          { type: 'Group', count: Math.floor(therapistStats.totalSessions * 0.10) },
+                        ]}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.3} />
+                          <XAxis dataKey="type" stroke="#94a3b8" />
+                          <YAxis stroke="#94a3b8" />
+                          <Tooltip 
+                            contentStyle={{ 
+                              backgroundColor: '#1e293b', 
+                              border: '1px solid #475569',
+                              borderRadius: '8px',
+                              color: '#e2e8f0'
+                            }}
+                          />
+                          <Bar dataKey="count" fill="#3b82f6" name="Sessions" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-700/30 backdrop-blur-md rounded-xl p-6 border border-slate-600/30">
+                    <h4 className="font-semibold text-slate-100 mb-4">Session Duration Distribution</h4>
+                    <div className="h-64">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={[
+                          { duration: '30 min', count: Math.floor(therapistStats.totalSessions * 0.10) },
+                          { duration: '45 min', count: Math.floor(therapistStats.totalSessions * 0.15) },
+                          { duration: '50 min', count: Math.floor(therapistStats.totalSessions * 0.50) },
+                          { duration: '60 min', count: Math.floor(therapistStats.totalSessions * 0.20) },
+                          { duration: '90 min', count: Math.floor(therapistStats.totalSessions * 0.05) },
+                        ]}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.3} />
+                          <XAxis dataKey="duration" stroke="#94a3b8" />
+                          <YAxis stroke="#94a3b8" />
+                          <Tooltip 
+                            contentStyle={{ 
+                              backgroundColor: '#1e293b', 
+                              border: '1px solid #475569',
+                              borderRadius: '8px',
+                              color: '#e2e8f0'
+                            }}
+                          />
+                          <Bar dataKey="count" fill="#a855f7" name="Sessions" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Session Time Slots */}
+                <div className="bg-slate-700/30 backdrop-blur-md rounded-xl p-6 border border-slate-600/30">
+                  <h4 className="font-semibold text-slate-100 mb-4">Popular Time Slots</h4>
+                  <div className="h-64">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={[
+                        { time: '8-10 AM', sessions: Math.floor(therapistStats.totalSessions * 0.15) },
+                        { time: '10-12 PM', sessions: Math.floor(therapistStats.totalSessions * 0.25) },
+                        { time: '12-2 PM', sessions: Math.floor(therapistStats.totalSessions * 0.10) },
+                        { time: '2-4 PM', sessions: Math.floor(therapistStats.totalSessions * 0.20) },
+                        { time: '4-6 PM', sessions: Math.floor(therapistStats.totalSessions * 0.20) },
+                        { time: '6-8 PM', sessions: Math.floor(therapistStats.totalSessions * 0.10) },
+                      ]}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.3} />
+                        <XAxis dataKey="time" stroke="#94a3b8" />
+                        <YAxis stroke="#94a3b8" />
+                        <Tooltip 
+                          contentStyle={{ 
+                            backgroundColor: '#1e293b', 
+                            border: '1px solid #475569',
+                            borderRadius: '8px',
+                            color: '#e2e8f0'
+                          }}
+                        />
+                        <Bar dataKey="sessions" fill="#10b981" name="Sessions" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                {/* Session Metrics */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="bg-slate-700/30 backdrop-blur-md rounded-xl p-6 border border-slate-600/30">
+                    <h4 className="font-semibold text-slate-100 mb-4">Attendance Rate</h4>
+                    <div className="flex items-center justify-center h-32">
+                      <div className="text-center">
+                        <div className="text-5xl font-bold text-emerald-500">{therapistStats.attendanceRate}%</div>
+                        <div className="text-sm text-slate-400 mt-2">Overall Attendance</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-700/30 backdrop-blur-md rounded-xl p-6 border border-slate-600/30">
+                    <h4 className="font-semibold text-slate-100 mb-4">Cancellation Rate</h4>
+                    <div className="flex items-center justify-center h-32">
+                      <div className="text-center">
+                        <div className="text-5xl font-bold text-amber-500">
+                          {therapistStats.totalSessions > 0 ? Math.round((therapistStats.cancelledSessions / therapistStats.totalSessions) * 100) : 0}%
+                        </div>
+                        <div className="text-sm text-slate-400 mt-2">Cancellation Rate</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-700/30 backdrop-blur-md rounded-xl p-6 border border-slate-600/30">
+                    <h4 className="font-semibold text-slate-100 mb-4">Total Hours</h4>
+                    <div className="flex items-center justify-center h-32">
+                      <div className="text-center">
+                        <div className="text-5xl font-bold text-blue-400">{therapistStats.hoursWorked}</div>
+                        <div className="text-sm text-slate-400 mt-2">Hours Worked</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Patients Report */}
             {selectedReport === 'patients' && userRole === 'therapist' && (
               <div className="space-y-6">
