@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { therapists } from '@/lib/supabase'
 
 interface BookSessionModalProps {
   isOpen: boolean
@@ -9,19 +10,60 @@ interface BookSessionModalProps {
 }
 
 export interface BookingData {
+  therapistId: string
   sessionType: string
   preferredDate: string
   preferredTime: string
   notes: string
 }
 
+interface Therapist {
+  id: string
+  name: string
+  specialization: string
+}
+
 export default function BookSessionModal({ isOpen, onClose, onSubmit }: BookSessionModalProps) {
   const [formData, setFormData] = useState<BookingData>({
+    therapistId: '',
     sessionType: 'individual',
     preferredDate: '',
     preferredTime: '',
     notes: ''
   })
+  const [therapistsList, setTherapistsList] = useState<Therapist[]>([])
+  const [isLoadingTherapists, setIsLoadingTherapists] = useState(true)
+
+  // Fetch therapists from database
+  useEffect(() => {
+    const fetchTherapists = async () => {
+      try {
+        setIsLoadingTherapists(true)
+        const { data, error } = await therapists.getAll()
+        
+        if (error) {
+          console.error('Error fetching therapists:', error)
+          return
+        }
+
+        if (data) {
+          setTherapistsList(data.map((t: any) => ({
+            id: t.id,
+            name: t.name,
+            specialization: t.specialization || 'General Therapy'
+          })))
+        }
+      } catch (err) {
+        console.error('Error loading therapists:', err)
+      } finally {
+        setIsLoadingTherapists(false)
+      }
+    }
+
+    if (isOpen) {
+      fetchTherapists()
+    }
+  }, [isOpen])
 
   if (!isOpen) return null
 
@@ -30,6 +72,7 @@ export default function BookSessionModal({ isOpen, onClose, onSubmit }: BookSess
     onSubmit(formData)
     // Reset form
     setFormData({
+      therapistId: '',
       sessionType: 'individual',
       preferredDate: '',
       preferredTime: '',
@@ -66,6 +109,29 @@ export default function BookSessionModal({ isOpen, onClose, onSubmit }: BookSess
 
         {/* Content */}
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
+          {/* Select Therapist */}
+          <div>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+              Select Therapist <span className="text-red-500">*</span>
+            </label>
+            <select
+              value={formData.therapistId}
+              onChange={(e) => setFormData({ ...formData, therapistId: e.target.value })}
+              className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100"
+              required
+              disabled={isLoadingTherapists}
+            >
+              <option value="">
+                {isLoadingTherapists ? 'Loading therapists...' : 'Select a therapist'}
+              </option>
+              {therapistsList.map(therapist => (
+                <option key={therapist.id} value={therapist.id}>
+                  {therapist.name} - {therapist.specialization}
+                </option>
+              ))}
+            </select>
+          </div>
+
           {/* Session Type */}
           <div>
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
@@ -105,23 +171,13 @@ export default function BookSessionModal({ isOpen, onClose, onSubmit }: BookSess
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               Preferred Time
             </label>
-            <select
+            <input
+              type="time"
               value={formData.preferredTime}
               onChange={(e) => setFormData({ ...formData, preferredTime: e.target.value })}
               className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100"
               required
-            >
-              <option value="">Select a time</option>
-              <option value="09:00">9:00 AM</option>
-              <option value="10:00">10:00 AM</option>
-              <option value="11:00">11:00 AM</option>
-              <option value="12:00">12:00 PM</option>
-              <option value="13:00">1:00 PM</option>
-              <option value="14:00">2:00 PM</option>
-              <option value="15:00">3:00 PM</option>
-              <option value="16:00">4:00 PM</option>
-              <option value="17:00">5:00 PM</option>
-            </select>
+            />
           </div>
 
           {/* Notes */}
@@ -146,7 +202,7 @@ export default function BookSessionModal({ isOpen, onClose, onSubmit }: BookSess
               </svg>
               <div className="text-sm text-blue-800 dark:text-blue-300">
                 <p className="font-medium mb-1">Booking Request</p>
-                <p>Your booking request will be sent to Dr. Sarah Johnson for confirmation. You'll receive a notification once your appointment is confirmed.</p>
+                <p>Your booking request will be sent to the selected therapist for confirmation. You'll receive a notification once your appointment is confirmed.</p>
               </div>
             </div>
           </div>
