@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import ThemeToggle from '@/components/ThemeToggle'
@@ -10,6 +10,7 @@ import { supabase } from '@/lib/supabase'
 
 export default function ResetPasswordPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { theme } = useTheme()
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -18,9 +19,42 @@ export default function ResetPasswordPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
+  const [isValidSession, setIsValidSession] = useState(false)
+  const [isCheckingSession, setIsCheckingSession] = useState(true)
+
+  // Verify the reset token/session on mount
+  useEffect(() => {
+    const verifySession = async () => {
+      try {
+        // Check if we have a valid session from the reset link
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+        
+        if (sessionError || !session) {
+          setError('Invalid or expired reset link. Please request a new password reset.')
+          setIsValidSession(false)
+        } else {
+          setIsValidSession(true)
+        }
+      } catch (err) {
+        console.error('Session verification error:', err)
+        setError('Unable to verify reset link. Please try again.')
+        setIsValidSession(false)
+      } finally {
+        setIsCheckingSession(false)
+      }
+    }
+
+    verifySession()
+  }, [searchParams])
 
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    if (!isValidSession) {
+      setError('Invalid session. Please request a new password reset link.')
+      return
+    }
+
     setIsLoading(true)
     setError('')
 
@@ -37,27 +71,19 @@ export default function ResetPasswordPage() {
     }
 
     try {
-      // Add timeout to prevent hanging
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Request timeout')), 10000)
-      )
-
-      const updatePromise = supabase.auth.updateUser({
+      const { error: updateError } = await supabase.auth.updateUser({
         password: password
       })
 
-      const { error: updateError } = await Promise.race([updatePromise, timeoutPromise]) as any
-
       if (updateError) {
         console.error('Password update error:', updateError)
-        if (updateError.message === 'Request timeout') {
-          setError('The request is taking too long. Please check your Supabase Site URL configuration and try requesting a new reset link.')
-        } else {
-          setError(updateError.message || 'Failed to update password. Please try again.')
-        }
+        setError(updateError.message || 'Failed to update password. Please try again.')
         setIsLoading(false)
         return
       }
+
+      // Sign out after password reset for security
+      await supabase.auth.signOut()
 
       setSuccess(true)
       setIsLoading(false)
@@ -68,11 +94,7 @@ export default function ResetPasswordPage() {
       }, 3000)
     } catch (err: any) {
       console.error('Unexpected error:', err)
-      if (err?.message === 'Request timeout') {
-        setError('The request is taking too long. This usually means the reset link is invalid or your Supabase Site URL is not configured correctly. Please request a new password reset.')
-      } else {
-        setError(err?.message || 'An unexpected error occurred. Please request a new reset link.')
-      }
+      setError(err?.message || 'An unexpected error occurred. Please request a new reset link.')
       setIsLoading(false)
     }
   }
@@ -111,7 +133,30 @@ export default function ResetPasswordPage() {
 
         {/* Reset Password Card */}
         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 border border-slate-200 dark:border-slate-700">
-          {success ? (
+          {isCheckingSession ? (
+            <div className="text-center py-8">
+              <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="text-slate-600 dark:text-slate-400">Verifying reset link...</p>
+            </div>
+          ) : !isValidSession ? (
+            <div className="text-center">
+              <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">Invalid Reset Link</h2>
+              <p className="text-slate-600 dark:text-slate-400 mb-6">
+                {error || 'This password reset link is invalid or has expired.'}
+              </p>
+              <Link 
+                href="/auth/forgot-password"
+                className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
+              >
+                Request New Reset Link
+              </Link>
+            </div>
+          ) : success ? (
             <div className="text-center">
               <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg className="w-8 h-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
