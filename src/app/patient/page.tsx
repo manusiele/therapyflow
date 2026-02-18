@@ -266,7 +266,7 @@ export default function PatientPortal() {
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-blue-700 dark:text-blue-300 font-medium">2:00 PM - 2:50 PM</span>
                   <Link 
-                    href="/video/demo-session-123"
+                    href="/video/session-tomorrow-123"
                     className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium"
                   >
                     Join Video
