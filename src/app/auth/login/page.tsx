@@ -152,15 +152,6 @@ export default function LoginPage() {
               </Link>
             </p>
           </div>
-
-          {/* Demo Credentials */}
-          <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-            <p className="text-xs font-semibold text-blue-900 dark:text-blue-300 mb-2">Demo Credentials:</p>
-            <div className="text-xs text-blue-700 dark:text-blue-400 space-y-1">
-              <p>Therapist: therapist@demo.com / any password</p>
-              <p>Patient: patient@demo.com / any password</p>
-            </div>
-          </div>
         </div>
 
         {/* Footer */}
