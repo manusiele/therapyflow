@@ -292,11 +292,26 @@ export const messages = {
     receiver_type: 'therapist' | 'patient'
     content: string
   }) => {
+    // Insert the message
     const { data, error } = await supabase
       .from('messages')
       .insert(message as any)
       .select()
       .single()
+    
+    if (!error && data) {
+      // Update the conversation's last_message_at
+      const therapistId = message.sender_type === 'therapist' ? message.sender_id : message.receiver_id
+      const patientId = message.sender_type === 'patient' ? message.sender_id : message.receiver_id
+      
+      await supabase
+        .from('conversations')
+        // @ts-expect-error - Supabase generated types issue
+        .update({ last_message_at: new Date().toISOString() })
+        .eq('therapist_id', therapistId)
+        .eq('patient_id', patientId)
+    }
+    
     return { data, error }
   },
 
@@ -321,6 +336,19 @@ export const messages = {
   },
 
   createConversation: async (therapistId: string, patientId: string) => {
+    // First check if conversation already exists
+    const { data: existing } = await supabase
+      .from('conversations')
+      .select('*')
+      .eq('therapist_id', therapistId)
+      .eq('patient_id', patientId)
+      .single()
+    
+    if (existing) {
+      return { data: existing, error: null }
+    }
+    
+    // Create new conversation if it doesn't exist
     const { data, error } = await supabase
       .from('conversations')
       .insert({
@@ -330,6 +358,86 @@ export const messages = {
       .select()
       .single()
     return { data, error }
+  }
+}
+
+// Notification operations
+export const notifications = {
+  getAll: async (userId: string, userType: 'therapist' | 'patient') => {
+    const { data, error } = await supabase
+      .from('notifications')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('user_type', userType)
+      .order('created_at', { ascending: false })
+    return { data, error }
+  },
+
+  getUnread: async (userId: string, userType: 'therapist' | 'patient') => {
+    const { data, error } = await supabase
+      .from('notifications')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('user_type', userType)
+      .eq('is_read', false)
+      .order('created_at', { ascending: false })
+    return { data, error }
+  },
+
+  getUnreadCount: async (userId: string, userType: 'therapist' | 'patient') => {
+    const { count, error } = await supabase
+      .from('notifications')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', userId)
+      .eq('user_type', userType)
+      .eq('is_read', false)
+    return { count, error }
+  },
+
+  create: async (notification: {
+    user_id: string
+    user_type: 'therapist' | 'patient'
+    type: 'session_request' | 'session_approved' | 'session_cancelled' | 'session_reminder' | 'message' | 'assessment_due'
+    title: string
+    message: string
+    related_id?: string
+  }) => {
+    const { data, error } = await supabase
+      .from('notifications')
+      .insert(notification as any)
+      .select()
+      .single()
+    return { data, error }
+  },
+
+  markAsRead: async (notificationId: string) => {
+    const { data, error } = await supabase
+      .from('notifications')
+      // @ts-expect-error - Supabase generated types issue
+      .update({ is_read: true })
+      .eq('id', notificationId)
+      .select()
+      .single()
+    return { data, error }
+  },
+
+  markAllAsRead: async (userId: string, userType: 'therapist' | 'patient') => {
+    const { error } = await supabase
+      .from('notifications')
+      // @ts-expect-error - Supabase generated types issue
+      .update({ is_read: true })
+      .eq('user_id', userId)
+      .eq('user_type', userType)
+      .eq('is_read', false)
+    return { error }
+  },
+
+  delete: async (notificationId: string) => {
+    const { error } = await supabase
+      .from('notifications')
+      .delete()
+      .eq('id', notificationId)
+    return { error }
   }
 }
 
