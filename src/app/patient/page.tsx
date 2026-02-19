@@ -4,16 +4,16 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import ThemeToggle from '@/components/ThemeToggle'
 import ProfileModal, { ProfileData } from '@/components/ProfileModal'
 import BookSessionModal, { BookingData } from '@/components/BookSessionModal'
 import AssessmentModal, { AssessmentData } from '@/components/AssessmentModal'
 import MessagesModal from '@/components/MessagesModal'
 import MoodTracker from '@/components/MoodTracker'
 import ResourcesPanel from '@/components/ResourcesPanel'
+import NotificationsDropdown from '@/components/NotificationsDropdown'
 import { useTheme } from '@/contexts/ThemeContext'
 import { useAuth } from '@/contexts/AuthContext'
-import { patients, sessions } from '@/lib/supabase'
+import { patients, sessions, messages, therapists, notifications } from '@/lib/supabase'
 
 interface Session {
   id: string
@@ -34,6 +34,7 @@ export default function PatientPortal() {
   const { user } = useAuth()
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
+  const [isSubmittingBooking, setIsSubmittingBooking] = useState(false)
   const [isAssessmentModalOpen, setIsAssessmentModalOpen] = useState(false)
   const [isMessagesModalOpen, setIsMessagesModalOpen] = useState(false)
   const [showToast, setShowToast] = useState(false)
@@ -41,6 +42,7 @@ export default function PatientPortal() {
   const [isLoading, setIsLoading] = useState(true)
   const [currentTime, setCurrentTime] = useState(new Date())
   const [upcomingSessions, setUpcomingSessions] = useState<Session[]>([])
+  const [patientId, setPatientId] = useState<string>('')
   const [assessmentHistory, setAssessmentHistory] = useState<Array<{
     date: string
     assessmentType: string
@@ -84,7 +86,9 @@ export default function PatientPortal() {
         }
 
         if (data) {
-          const patientId = (data as any).id
+          const dbPatientId = (data as any).id
+          setPatientId(dbPatientId)
+          console.log('Patient ID loaded:', dbPatientId)
           
           setProfileData({
             name: (data as any).name || 'Patient',
@@ -96,8 +100,8 @@ export default function PatientPortal() {
           })
 
           // Fetch patient's sessions
-          if (patientId) {
-            const { data: sessionsData, error: sessionsError } = await sessions.getAll({ patientId })
+          if (dbPatientId) {
+            const { data: sessionsData, error: sessionsError } = await sessions.getAll({ patientId: dbPatientId })
             
             if (sessionsError) {
               console.error('Error fetching sessions:', sessionsError)
@@ -154,12 +158,130 @@ export default function PatientPortal() {
     }
   }
 
-  const handleBookSession = (data: BookingData) => {
-    setIsBookingModalOpen(false)
-    showToastMessage('Booking request sent! You will receive a confirmation soon.')
-    // In production, save to Supabase
-    console.log('Booking request:', data)
-  }
+  const handleBookSession = async (data: BookingData) => {
+      if (!patientId) {
+        showToastMessage('Please log in to book a session.')
+        return
+      }
+
+      setIsSubmittingBooking(true)
+
+      try {
+        // Create the session in the database with pending status
+        const scheduledAt = new Date(`${data.preferredDate}T${data.preferredTime}`)
+
+        const { data: sessionData, error: sessionError } = await sessions.create({
+          patient_id: patientId,
+          therapist_id: data.therapistId,
+          session_type: data.sessionType,
+          scheduled_at: scheduledAt.toISOString(),
+          duration_minutes: 50, // Default duration
+          status: 'pending',
+          notes: data.notes || ''
+        })
+
+        if (sessionError) {
+          console.error('Error creating session:', sessionError)
+          showToastMessage('Failed to book session. Please try again.')
+          setIsSubmittingBooking(false)
+          return
+        }
+
+        console.log('Session created:', sessionData)
+
+        // Get therapist name for the confirmation message
+        const { data: therapistData } = await therapists.getById(data.therapistId)
+        const therapistName = therapistData ? (therapistData as any).name : 'your therapist'
+
+        // Create or get conversation between patient and therapist
+        const conversationResult = await messages.createConversation(data.therapistId, patientId)
+        console.log('Conversation result:', conversationResult)
+
+        if (conversationResult.error) {
+          console.error('Error creating conversation:', conversationResult.error)
+        }
+
+        // Send a message notification to the therapist
+        const therapistMessage = await messages.sendMessage({
+          sender_id: patientId,
+          sender_type: 'patient',
+          receiver_id: data.therapistId,
+          receiver_type: 'therapist',
+          content: `🔔 New Session Request
+
+  ${data.sessionType.charAt(0).toUpperCase() + data.sessionType.slice(1)} Therapy Session
+
+  📅 Date: ${new Date(scheduledAt).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+  ⏰ Time: ${new Date(scheduledAt).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}
+  ⏱️ Duration: 50 minutes
+
+  ${data.notes ? `📝 Notes: ${data.notes}` : ''}
+
+  Please review and confirm this appointment.`
+        })
+
+        console.log('Therapist message result:', therapistMessage)
+
+        if (therapistMessage.error) {
+          console.error('Error sending notification to therapist:', therapistMessage.error)
+        }
+
+        // Create notification for therapist
+        await notifications.create({
+          user_id: data.therapistId,
+          user_type: 'therapist',
+          type: 'session_request',
+          title: 'New Session Request',
+          message: `${profileData.name} has requested a ${data.sessionType} therapy session on ${new Date(scheduledAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} at ${new Date(scheduledAt).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}`,
+          related_id: (sessionData as any)?.id
+        })
+
+        // Send a confirmation message back to the patient
+        const patientMessage = await messages.sendMessage({
+          sender_id: data.therapistId,
+          sender_type: 'therapist',
+          receiver_id: patientId,
+          receiver_type: 'patient',
+          content: `✅ Booking Request Received
+
+  Your session booking request has been sent to ${therapistName}.
+
+  📅 Session Details:
+  • Therapist: ${therapistName}
+  • Type: ${data.sessionType.charAt(0).toUpperCase() + data.sessionType.slice(1)} Therapy
+  • Date: ${new Date(scheduledAt).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+  • Time: ${new Date(scheduledAt).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}
+  • Duration: 50 minutes
+  • Status: ⏳ Pending Confirmation
+
+  ${therapistName} will review your request and confirm the appointment shortly. You'll receive a notification once it's confirmed.`
+        })
+
+        console.log('Patient message result:', patientMessage)
+
+        if (patientMessage.error) {
+          console.error('Error sending confirmation to patient:', patientMessage.error)
+        }
+
+        // Refresh sessions list
+        const { data: updatedSessions } = await sessions.getAll({ patientId })
+        if (updatedSessions) {
+          const now = new Date()
+          const upcoming = (updatedSessions as any[])
+            .filter((session: any) => new Date(session.scheduled_at) >= now)
+            .sort((a: any, b: any) => new Date(a.scheduled_at).getTime() - new Date(b.scheduled_at).getTime())
+          setUpcomingSessions(upcoming)
+        }
+
+        setIsBookingModalOpen(false)
+        setIsSubmittingBooking(false)
+        showToastMessage('Booking request sent! Check your messages for confirmation details.')
+      } catch (err) {
+        console.error('Error booking session:', err)
+        showToastMessage('Failed to book session. Please try again.')
+        setIsSubmittingBooking(false)
+      }
+    }
 
   const handleTakeAssessment = (data: AssessmentData) => {
     const newAssessment = {
@@ -211,6 +333,15 @@ export default function PatientPortal() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                 </svg>
               </button>
+              {patientId ? (
+                <NotificationsDropdown userId={patientId} userType="patient" />
+              ) : (
+                <div className="p-2 opacity-50" title="Loading notifications...">
+                  <svg className="w-5 h-5 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                  </svg>
+                </div>
+              )}
               <button 
                 onClick={() => setIsMessagesModalOpen(true)}
                 title="Messages"
@@ -400,6 +531,7 @@ export default function PatientPortal() {
         isOpen={isBookingModalOpen}
         onClose={() => setIsBookingModalOpen(false)}
         onSubmit={handleBookSession}
+        isSubmitting={isSubmittingBooking}
       />
 
       {/* Assessment Modal */}
