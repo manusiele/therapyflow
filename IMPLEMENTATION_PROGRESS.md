@@ -41,9 +41,9 @@
 **Files Modified:**
 - `src/app/page.tsx` - Updated navigation with auth buttons
 
-**Demo Credentials:**
-- Therapist: therapist@demo.com / any password
-- Patient: patient@demo.com / any password
+**Authentication:**
+- Uses Supabase authentication with email/password
+- Create an account via signup pages to access the application
 
 ---
 
